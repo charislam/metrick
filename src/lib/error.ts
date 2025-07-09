@@ -35,6 +35,12 @@ export class Result<T, E> {
     throw new Error(`Tried to unwrap an Err: ${this.error}`);
   }
 
+  /** Returns the value if Ok, or throws the raw error if Err */
+  unwrapRaw(): T {
+    if (this.isOk()) return this.value as T;
+    throw this.error;
+  }
+
   /** Returns the value if Ok, or a default if Err */
   unwrapOr(defaultValue: T): T {
     return this.isOk() ? (this.value as T) : defaultValue;

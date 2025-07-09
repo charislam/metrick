@@ -58,6 +58,11 @@ class IndexedDBManager {
     return this.db?.getAll("documentSamples");
   }
 
+  async deleteDocumentSample(id: string) {
+    if (!this.db) await this.init();
+    return this.db?.delete("documentSamples", id);
+  }
+
   async saveAnnotationSession(session: AnnotationSession) {
     if (!this.db) await this.init();
     return this.db?.put("annotationSessions", session);

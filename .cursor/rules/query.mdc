@@ -40,7 +40,11 @@ const {
 });
 ```
 
-**Applies to:**
+## Use with Tanstack Query
+
+Tanstack Query intelligently handles any thrown errors and returns them through the `error` and `isError` fields. To integrate with Tanstack Query, `unwrapRaw` the result to throw the underlying error.
+
+## Applies to:
 
 - All `.tsx` and `.jsx` files
 - All IndexedDB and async data fetching/mutation

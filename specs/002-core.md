@@ -73,8 +73,6 @@ export interface Document {
   content: string;
   contentType: "guide" | "reference" | "troubleshooting";
   metadata: Record<string, any>;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface Question {
@@ -95,6 +93,7 @@ export interface Annotation {
   annotatorId: string;
   notes?: string;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface DocumentSample {
@@ -104,6 +103,7 @@ export interface DocumentSample {
   documents: Document[];
   samplingCriteria: SamplingCriteria;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface SamplingCriteria {
@@ -266,13 +266,6 @@ export const indexedDB = new IndexedDBManager();
 - [ ] Create progress tracking display
 - [ ] Implement annotation navigation
 - [ ] Add annotation session management
-
-### Task 5: Integration and Testing
-
-- [ ] Connect all components with proper state management
-- [ ] Test database connections and queries
-- [ ] Verify IndexedDB storage functionality
-- [ ] Test form validations and user interactions
 
 ## Next Steps (Phase 2 Preview)
 
