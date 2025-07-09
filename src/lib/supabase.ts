@@ -25,9 +25,7 @@ export async function fetchAllDocuments(): Promise<
     // Fetch troubleshooting entries
     const troubleshootingPromise = supabase
       .from("troubleshooting_entries")
-      .select(
-        "id, title, description, api, errors, github_url, topics, keywords"
-      );
+      .select("id, title, api, errors, github_url, topics, keywords");
 
     const [pageRes, troubleshootingRes] = await Promise.all([
       pagePromise,
@@ -74,21 +72,13 @@ export async function fetchAllDocuments(): Promise<
     const troubleshootings: import("../types").Document[] = [];
     (troubleshootingRes.data ?? []).forEach((doc: unknown) => {
       if (typeof doc !== "object" || doc === null) return;
-      const {
-        id,
-        title,
-        description,
-        api,
-        errors,
-        github_url,
-        topics,
-        keywords,
-      } = doc as Record<string, unknown>;
+      const { id, title, api, errors, github_url, topics, keywords } =
+        doc as Record<string, unknown>;
       if (typeof id === "undefined") return;
       troubleshootings.push({
         id: String(id),
         title: typeof title === "string" ? title : "Untitled",
-        content: typeof description === "string" ? description : "",
+        content: "",
         contentType: "troubleshooting",
         metadata: {
           api,

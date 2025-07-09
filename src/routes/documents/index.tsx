@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DocumentSampleCollection } from "../../components/document/DocumentSampleCollection";
+import { DocumentCollectionStats } from "../../components/document/DocumentCollectionStats";
 import { DocumentSampler } from "../../components/document/DocumentSampler";
 
 function DocumentsPage() {
@@ -10,7 +10,7 @@ function DocumentsPage() {
           <DocumentSampler />
         </section>
         <section className="bg-white rounded-xl shadow-lg p-8 border border-muted-200">
-          <DocumentSampleCollection />
+          <DocumentCollectionStats />
         </section>
       </div>
     </div>
