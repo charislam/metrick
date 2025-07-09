@@ -1,0 +1,46 @@
+---
+globs: *.jsx,*.tsx
+alwaysApply: false
+---
+
+# Cursor Rule: Use TanStack Query for Async Data in TSX/JSX
+
+**Rule:**
+All IndexedDB and async data operations in `.tsx` and `.jsx` files must use TanStack Query (`useQuery`, `useMutation`, `useQueryClient`) instead of `useEffect` or direct calls. Do not fetch or mutate data directly in components or with useEffect.
+
+**Rationale:**
+
+- Ensures consistent, cache-aware, and reactive data flows
+- Handles loading, error, and refetch states automatically
+- Prevents stale data and race conditions
+- Simplifies component logic and improves testability
+
+**Example (before):**
+
+```tsx
+useEffect(() => {
+  const fetchSamples = async () => {
+    const result = await indexedDB.getDocumentSamples();
+    setSamples(result || []);
+  };
+  fetchSamples();
+}, []);
+```
+
+**Example (after):**
+
+```tsx
+const {
+  data: samples = [],
+  isLoading,
+  isError,
+} = useQuery({
+  queryKey: ["document-samples"],
+  queryFn: async () => (await indexedDB.getDocumentSamples()) || [],
+});
+```
+
+**Applies to:**
+
+- All `.tsx` and `.jsx` files
+- All IndexedDB and async data fetching/mutation
