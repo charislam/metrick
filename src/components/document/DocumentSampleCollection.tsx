@@ -21,27 +21,38 @@ export function DocumentSampleCollection() {
   }
 
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4">Document Collection</h2>
+    <div className="space-y-8">
+      <h2 className="text-2xl font-bold tracking-tight mb-4">
+        Document Collection
+      </h2>
       {samples.length === 0 && (
-        <div className="text-gray-500">No samples found.</div>
+        <div className="text-muted-foreground italic text-center py-4 bg-muted/30 rounded">
+          No samples found.
+        </div>
       )}
       {samples.map((sample) => (
-        <div key={sample.id} className="mb-6">
-          <div className="font-semibold mb-2">Sample: {sample.name}</div>
+        <div key={sample.id} className="mb-8">
+          <div className="font-semibold mb-2 text-lg">
+            Sample: {sample.name}
+          </div>
           {sample.documents.length === 0 ? (
-            <div className="text-gray-400 text-sm mb-2">
+            <div className="text-muted-foreground text-sm mb-2">
               No documents in this sample.
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {sample.documents.map((doc) => (
-                <Card key={doc.id}>
-                  <div className="font-bold">{doc.title}</div>
-                  <div className="text-xs text-gray-600 mb-1">
+                <Card
+                  key={doc.id}
+                  className="border border-muted-200 hover:shadow-md transition-shadow"
+                >
+                  <div className="font-bold text-base mb-1">{doc.title}</div>
+                  <div className="text-xs text-muted-foreground mb-1">
                     Type: {doc.contentType}
                   </div>
-                  <div className="text-sm line-clamp-2">{doc.content}</div>
+                  <div className="text-sm line-clamp-2 text-muted-foreground">
+                    {doc.content}
+                  </div>
                 </Card>
               ))}
             </div>

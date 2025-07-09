@@ -18,30 +18,41 @@ export function useDocumentSamples() {
 
 export function DocumentSamplerSamples() {
   const { samples, isLoading, isError, error } = useDocumentSamples();
-  if (isLoading) return <div>Loading samples...</div>;
+  if (isLoading)
+    return <div className="text-muted-foreground">Loading samples...</div>;
   if (isError)
     return (
-      <div className="text-red-500 text-xs">
+      <div className="text-destructive text-xs">
         {error instanceof Error ? error.message : String(error)}
       </div>
     );
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {samples.map((sample) => (
-        <Card key={sample.id}>
-          <div className="font-bold">{sample.name}</div>
-          <div className="text-sm text-gray-600">{sample.description}</div>
-          <div className="text-xs mt-1">
-            Size: {sample.samplingCriteria.sampleSize} | Guide:{" "}
-            {sample.samplingCriteria.contentTypeDistribution.guide}, Reference:{" "}
-            {sample.samplingCriteria.contentTypeDistribution.reference},
-            Troubleshooting:{" "}
+        <Card
+          key={sample.id}
+          className="border border-muted-200 hover:shadow-md transition-shadow"
+        >
+          <div className="font-bold text-lg mb-1">{sample.name}</div>
+          <div className="text-sm text-muted-foreground mb-1">
+            {sample.description}
+          </div>
+          <div className="text-xs text-muted-foreground">
+            <span className="font-medium">Size:</span>{" "}
+            {sample.samplingCriteria.sampleSize} &bull;{" "}
+            <span className="font-medium">Guide:</span>{" "}
+            {sample.samplingCriteria.contentTypeDistribution.guide},{" "}
+            <span className="font-medium">Reference:</span>{" "}
+            {sample.samplingCriteria.contentTypeDistribution.reference},{" "}
+            <span className="font-medium">Troubleshooting:</span>{" "}
             {sample.samplingCriteria.contentTypeDistribution.troubleshooting}
           </div>
         </Card>
       ))}
       {samples.length === 0 && (
-        <div className="text-gray-500">No samples yet.</div>
+        <div className="text-muted-foreground italic text-center py-4 bg-muted/30 rounded">
+          No samples yet.
+        </div>
       )}
     </div>
   );

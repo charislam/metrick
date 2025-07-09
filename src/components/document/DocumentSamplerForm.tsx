@@ -110,46 +110,113 @@ export function DocumentSamplerForm() {
     saveSampleMutation,
   } = useDocumentSamplerForm();
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 mb-6">
-      <Input placeholder="Sample Name" {...register("name")} />
-      {errors.name && (
-        <div className="text-red-500 text-xs">{errors.name.message}</div>
-      )}
-      <Input placeholder="Description" {...register("description")} />
-      <div className="flex gap-2">
-        <Input
-          type="number"
-          placeholder="Guide"
-          {...register("guide", { valueAsNumber: true })}
-          min={0}
-        />
-        <Input
-          type="number"
-          placeholder="Reference"
-          {...register("reference", { valueAsNumber: true })}
-          min={0}
-        />
-        <Input
-          type="number"
-          placeholder="Troubleshooting"
-          {...register("troubleshooting", { valueAsNumber: true })}
-          min={0}
-        />
-      </div>
-      {(errors.guide || errors.reference || errors.troubleshooting) && (
-        <div className="text-red-500 text-xs">
-          Check your content type counts.
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label
+            htmlFor="sample-name"
+            className="block text-sm font-medium text-muted-foreground"
+          >
+            Sample Name
+          </label>
+          <Input
+            id="sample-name"
+            placeholder="Sample Name"
+            {...register("name")}
+          />
+          {errors.name && (
+            <div className="text-destructive text-xs mt-1">
+              {errors.name.message}
+            </div>
+          )}
         </div>
+        <div className="space-y-2">
+          <label
+            htmlFor="sample-description"
+            className="block text-sm font-medium text-muted-foreground"
+          >
+            Description
+          </label>
+          <Input
+            id="sample-description"
+            placeholder="Description"
+            {...register("description")}
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          htmlFor="sample-guide"
+          className="block text-sm font-medium text-muted-foreground mb-2"
+        >
+          Content Type Distribution
+        </label>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="space-y-1">
+            <label htmlFor="sample-guide" className="sr-only">
+              Guide
+            </label>
+            <Input
+              id="sample-guide"
+              type="number"
+              placeholder="Guide"
+              min={0}
+              {...register("guide", { valueAsNumber: true })}
+            />
+            <span className="block text-xs text-muted-foreground">Guide</span>
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="sample-reference" className="sr-only">
+              Reference
+            </label>
+            <Input
+              id="sample-reference"
+              type="number"
+              placeholder="Reference"
+              min={0}
+              {...register("reference", { valueAsNumber: true })}
+            />
+            <span className="block text-xs text-muted-foreground">
+              Reference
+            </span>
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="sample-troubleshooting" className="sr-only">
+              Troubleshooting
+            </label>
+            <Input
+              id="sample-troubleshooting"
+              type="number"
+              placeholder="Troubleshooting"
+              min={0}
+              {...register("troubleshooting", { valueAsNumber: true })}
+            />
+            <span className="block text-xs text-muted-foreground">
+              Troubleshooting
+            </span>
+          </div>
+        </div>
+        {(errors.guide || errors.reference || errors.troubleshooting) && (
+          <div className="text-destructive text-xs mt-1">
+            Check your content type counts.
+          </div>
+        )}
+      </div>
+      {localError && (
+        <div className="text-destructive text-xs">{localError}</div>
       )}
-      {localError && <div className="text-red-500 text-xs">{localError}</div>}
       {saveSampleMutation.isError && (
-        <div className="text-red-500 text-xs">
+        <div className="text-destructive text-xs">
           {saveSampleMutation.error instanceof Error
             ? saveSampleMutation.error.message
             : "Failed to save sample."}
         </div>
       )}
-      <Button type="submit" disabled={saveSampleMutation.status === "pending"}>
+      <Button
+        type="submit"
+        className="w-full mt-2"
+        disabled={saveSampleMutation.status === "pending"}
+      >
         {saveSampleMutation.status === "pending"
           ? "Creating..."
           : "Create Sample"}

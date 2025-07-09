@@ -1,11 +1,22 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { DocumentSampleCollection } from "../../components/document/DocumentSampleCollection";
 import { DocumentSampler } from "../../components/document/DocumentSampler";
 
-export default function DocumentsPage() {
+function DocumentsPage() {
   return (
-    <div className="max-w-2xl mx-auto py-8 flex flex-col gap-8">
-      <DocumentSampler />
-      <DocumentSampleCollection />
+    <div className="flex flex-col flex-1 bg-muted/50 py-12 px-4 justify-center items-center">
+      <div className="w-full max-w-3xl space-y-10">
+        <section className="bg-white rounded-xl shadow-lg p-8 border border-muted-200">
+          <DocumentSampler />
+        </section>
+        <section className="bg-white rounded-xl shadow-lg p-8 border border-muted-200">
+          <DocumentSampleCollection />
+        </section>
+      </div>
     </div>
   );
 }
+
+export const Route = createFileRoute("/documents/")({
+  component: DocumentsPage,
+});

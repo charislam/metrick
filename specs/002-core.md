@@ -254,7 +254,6 @@ export const indexedDB = new IndexedDBManager();
 
 - [x] Implement DocumentSampler component
 - [x] Create DocumentCollection view
-- [ ] Build document preview functionality
 
 > **2024-06-12:**
 > Phase 1 Task 3 completed. Implemented DocumentSampler (for creating and listing document samples) and DocumentCollection (for viewing documents grouped by sample). Added a new route at `src/routes/documents/index.tsx` to display both components. Ready for Task 4.
