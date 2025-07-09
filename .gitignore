@@ -1,0 +1,8 @@
+# Local LLM preferences
+CLAUDE.local.md
+
+# Dependencies
+node_modules
+
+# Secrets
+.env*

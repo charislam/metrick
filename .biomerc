@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "biome:recommended"
+  ],
+  "linter": {
+    "rules": {
+      "react/jsx-uses-react": "off",
+      "react/react-in-jsx-scope": "off"
+    }
+  },
+  "formatter": {
+    "enabled": true
+  }
+}
