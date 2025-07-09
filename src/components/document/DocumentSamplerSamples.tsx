@@ -47,7 +47,8 @@ function DocumentSampleDeleteButton({
       <DialogTrigger asChild>
         <Button
           variant="secondary"
-          className="w-9 h-9 p-0 rounded-full border border-muted-300 flex items-center justify-center"
+          size="icon"
+          shape="circle"
           aria-label="Delete sample"
         >
           <Trash2 className="w-5 h-5" />
@@ -128,16 +129,18 @@ export function DocumentSamplerSamples() {
             />
             <Button
               variant="secondary"
+              size="icon"
+              shape="circle"
               onClick={() => alert(`Sample info for: ${sample.name}`)}
-              className="w-9 h-9 p-0 rounded-full border border-muted-300 flex items-center justify-center"
               aria-label="Sample info"
             >
               <Info className="w-5 h-5" />
             </Button>
             <Button
               variant="primary"
+              size="icon"
+              shape="circle"
               onClick={() => alert(`Annotate sample: ${sample.name}`)}
-              className="w-9 h-9 p-0 rounded-full border border-muted-300 flex items-center justify-center"
               aria-label="Annotate sample"
             >
               <Pencil className="w-5 h-5" />
