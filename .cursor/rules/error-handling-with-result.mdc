@@ -1,0 +1,136 @@
+---
+globs: *.ts,*.js,*.tsx,*.jsx
+alwaysApply: false
+---
+
+### Rule: Error Handling with Result Type Enum
+
+**Summary:**  
+All error handling in TypeScript/JavaScript code must use the Result<T, E> class (see @src/lib/error.ts), inspired by Rust's Result enum. Do not use thrown errors for control flow or error propagation. Instead, return a Result object with either an Ok or Err value.
+
+#### Rationale
+
+- This approach makes error handling explicit and type-safe.
+- It prevents unhandled exceptions and makes error propagation predictable.
+- It improves code readability and maintainability.
+
+#### How to Handle Errors (Correct)
+
+- Return Result.ok(value) for successful operations.
+- Return Result.err(error) for failures.
+- Use isOk(), isErr(), unwrapOr(), map(), and andThen() for safe handling and chaining.
+- Use custom error types (e.g., DatabaseError, UnknownError) as the error type in Result.
+
+**Example:**
+
+```ts
+import { Result, DatabaseError } from "../lib/error";
+
+// Correct: Returning a Result instead of throwing
+function getUserById(id: string): Result<User, DatabaseError> {
+  const user = db.findUser(id);
+  if (!user) {
+    return Result.err(new DatabaseError("User not found"));
+  }
+  return Result.ok(user);
+}
+
+// Correct: Handling the Result
+const result = getUserById("abc");
+if (result.isOk()) {
+  const user = result.unwrap();
+  // use user
+} else {
+  const error = result.unwrapErr();
+  // handle error
+}
+```
+
+#### How NOT to Handle Errors (Incorrect)
+
+- Do not throw errors for expected error conditions.
+- Do not use try/catch for normal error handling in business logic.
+
+**Incorrect Example:**
+
+```ts
+// Incorrect: Throwing errors for control flow
+function getUserById(id: string): User {
+  const user = db.findUser(id);
+  if (!user) {
+    throw new Error("User not found"); // ❌ Do not do this
+  }
+  return user;
+}
+
+## Exceptions
+
+- Only throw errors for truly exceptional, unrecoverable situations (e.g., programming errors, assertion failures).
+- For all business logic and recoverable errors, use Result.
+```
+
+### Rule: Error Handling with Result Type Enum
+
+**Summary:**  
+All error handling in TypeScript/JavaScript code must use the Result<T, E> class (see @src/lib/error.ts), inspired by Rust's Result enum. Do not use thrown errors for control flow or error propagation. Instead, return a Result object with either an Ok or Err value.
+
+#### Rationale
+
+- This approach makes error handling explicit and type-safe.
+- It prevents unhandled exceptions and makes error propagation predictable.
+- It improves code readability and maintainability.
+
+#### How to Handle Errors (Correct)
+
+- Return Result.ok(value) for successful operations.
+- Return Result.err(error) for failures.
+- Use isOk(), isErr(), unwrapOr(), map(), and andThen() for safe handling and chaining.
+- Use custom error types (e.g., DatabaseError, UnknownError) as the error type in Result.
+
+**Example:**
+
+```ts
+import { Result, DatabaseError } from "../lib/error";
+
+// Correct: Returning a Result instead of throwing
+function getUserById(id: string): Result<User, DatabaseError> {
+  const user = db.findUser(id);
+  if (!user) {
+    return Result.err(new DatabaseError("User not found"));
+  }
+  return Result.ok(user);
+}
+
+// Correct: Handling the Result
+const result = getUserById("abc");
+if (result.isOk()) {
+  const user = result.unwrap();
+  // use user
+} else {
+  const error = result.unwrapErr();
+  // handle error
+}
+```
+
+#### How NOT to Handle Errors (Incorrect)
+
+- Do not throw errors for expected error conditions.
+- Do not use try/catch for normal error handling in business logic.
+
+**Incorrect Example:**
+
+```ts
+// Incorrect: Throwing errors for control flow
+function getUserById(id: string): User {
+  const user = db.findUser(id);
+  if (!user) {
+    throw new Error("User not found"); // ❌ Do not do this
+  }
+  return user;
+}
+
+## Exceptions
+
+- Only throw errors for truly exceptional, unrecoverable situations (e.g., programming errors, assertion failures).
+- For all business logic and recoverable errors, use Result.
+```

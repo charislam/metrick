@@ -1,0 +1,158 @@
+---
+description: Creating React forms in .jsx and .tsx files
+alwaysApply: false
+---
+
+# Cursor Rule: Use React Hook Form (with Zod) for All Forms in TSX/JSX
+
+**Rule:**
+All forms in `.tsx` and `.jsx` files must use [React Hook Form](https://react-hook-form.com/) for form state management, validation, and submission. All validation must be performed using [Zod](https://zod.dev/) schemas, integrated via `zodResolver`. Do not use `useState` or uncontrolled components for form fields, and do not use manual validation logic.
+
+**Rationale:**
+
+- Provides robust, scalable form state management
+- Simplifies validation and error handling
+- Reduces boilerplate and improves performance
+- Ensures consistency across all forms
+- Zod schemas provide type-safe, declarative validation and autocompletion
+
+**Correct Usage:**
+
+- Use `useForm` to manage form state
+- Use `register` to connect inputs to the form
+- Use `handleSubmit` for submission
+- Use `formState.errors` for validation feedback
+- Use `reset` to clear or reset form state
+- Define a Zod schema for all form fields and validation
+- Use `zodResolver(schema)` as the resolver for `useForm`
+
+**Example:**
+
+```tsx
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  name: z.string().min(2, "Name required"),
+  email: z.string().email(),
+});
+
+type FormValues = z.infer<typeof schema>;
+
+const MyForm = () => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: { name: "", email: "" },
+  });
+
+  const onSubmit = (data: FormValues) => {
+    // handle form data
+    reset();
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register("name")} />
+      {errors.name && <span>{errors.name.message}</span>}
+      <input {...register("email")} />
+      {errors.email && <span>{errors.email.message}</span>}
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+```
+
+**Incorrect Usage:**
+
+- Using `useState` for each field
+- Not using `register` for inputs
+- Not using `handleSubmit` for form submission
+- Not using Zod for validation
+- Using manual/inline validation logic
+
+**Exceptions:**
+
+- Only for non-form UI (e.g., search bars, filter chips) where form state is not needed.
+
+# Cursor Rule: Use React Hook Form (with Zod) for All Forms in TSX/JSX
+
+**Rule:**
+All forms in `.tsx` and `.jsx` files must use [React Hook Form](https://react-hook-form.com/) for form state management, validation, and submission. All validation must be performed using [Zod](https://zod.dev/) schemas, integrated via `zodResolver`. Do not use `useState` or uncontrolled components for form fields, and do not use manual validation logic.
+
+**Rationale:**
+
+- Provides robust, scalable form state management
+- Simplifies validation and error handling
+- Reduces boilerplate and improves performance
+- Ensures consistency across all forms
+- Zod schemas provide type-safe, declarative validation and autocompletion
+
+**Correct Usage:**
+
+- Use `useForm` to manage form state
+- Use `register` to connect inputs to the form
+- Use `handleSubmit` for submission
+- Use `formState.errors` for validation feedback
+- Use `reset` to clear or reset form state
+- Define a Zod schema for all form fields and validation
+- Use `zodResolver(schema)` as the resolver for `useForm`
+
+**Example:**
+
+```tsx
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  name: z.string().min(2, "Name required"),
+  email: z.string().email(),
+});
+
+type FormValues = z.infer<typeof schema>;
+
+const MyForm = () => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: { name: "", email: "" },
+  });
+
+  const onSubmit = (data: FormValues) => {
+    // handle form data
+    reset();
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register("name")} />
+      {errors.name && <span>{errors.name.message}</span>}
+      <input {...register("email")} />
+      {errors.email && <span>{errors.email.message}</span>}
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+```
+
+**Incorrect Usage:**
+
+- Using `useState` for each field
+- Not using `register` for inputs
+- Not using `handleSubmit` for form submission
+- Not using Zod for validation
+- Using manual/inline validation logic
+
+**Exceptions:**
+
+- Only for non-form UI (e.g., search bars, filter chips) where form state is not needed.

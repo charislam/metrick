@@ -22,6 +22,24 @@ export const Route = createRootRoute({
 				>
 					Documents
 				</Link>
+				{" | "}
+				<Link
+					to="/questions"
+					activeProps={{
+						className: "font-bold underline",
+					}}
+				>
+					Questions
+				</Link>
+				{" | "}
+				<Link
+					to="/settings"
+					activeProps={{
+						className: "font-bold underline",
+					}}
+				>
+					Settings
+				</Link>
 			</nav>
 			<Outlet />
 			<TanStackRouterDevtools />

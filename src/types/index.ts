@@ -14,6 +14,8 @@ export interface Question {
 	generatedBy: "llm" | "manual";
 	createdAt: Date;
 	updatedAt: Date;
+	documentSampleId: string; // Associated document sample
+	status: "pending" | "accepted" | "rejected"; // Curation status
 }
 
 export interface Annotation {
