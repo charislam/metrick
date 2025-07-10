@@ -258,15 +258,6 @@ export const indexedDB = new IndexedDBManager();
 > **2024-06-12:**
 > Phase 1 Task 3 completed. Implemented DocumentSampler (for creating and listing document samples) and DocumentCollection (for viewing documents grouped by sample). Added a new route at `src/routes/documents/index.tsx` to display both components. Ready for Task 4.
 
-### Task 4: Annotation Workspace Foundation
-
-- [ ] Create AnnotationWorkspace layout
-- [ ] Implement AnnotationForm with validation
-- [ ] Add keyboard shortcuts for efficiency
-- [ ] Create progress tracking display
-- [ ] Implement annotation navigation
-- [ ] Add annotation session management
-
 ## Next Steps (Phase 2 Preview)
 
 After Phase 1 completion, Phase 2 will focus on:
