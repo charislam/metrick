@@ -3,6 +3,7 @@ import { z } from "zod";
 const envSchema = z.object({
 	VITE_SUPABASE_URL: z.string().url(),
 	VITE_SUPABASE_PUBLIC_KEY: z.string().min(1),
+	DEV: z.boolean().optional(),
 });
 
 // biome-ignore lint/plugin: this is where we validate the environment variables
