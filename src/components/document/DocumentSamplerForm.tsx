@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Bot } from "lucide-react";
 import { indexedDB } from "../../lib/indexed-db";
 import { fetchAllDocuments } from "../../lib/supabase";
 import type { DocumentSample } from "../../types";
@@ -9,6 +10,80 @@ import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import type { FormValues } from "./DocumentSamplerUtils";
 import { schema, stratifiedSample } from "./DocumentSamplerUtils";
+
+// Arrays for random name generation
+const adjectives = [
+  "purple", "electric", "cosmic", "golden", "silver", "crystal", "emerald", "sapphire",
+  "midnight", "azure", "crimson", "amber", "jade", "ruby", "pearl", "diamond",
+  "stellar", "lunar", "solar", "mystical", "ethereal", "radiant", "luminous", "brilliant",
+  "serene", "vibrant", "majestic", "elegant", "graceful", "fierce", "bold", "swift",
+  "gentle", "powerful", "ancient", "modern", "classic", "futuristic", "digital", "quantum",
+  "blazing", "frozen", "velvet", "marble", "obsidian", "titanium", "platinum", "bronze",
+  "copper", "iron", "steel", "chrome", "neon", "plasma", "ionic", "atomic",
+  "nuclear", "kinetic", "magnetic", "gravity", "spiral", "vortex", "prism", "fractal",
+  "holographic", "synthetic", "organic", "bio", "cyber", "nano", "micro", "macro",
+  "ultra", "mega", "giga", "terra", "infinite", "eternal", "temporal", "spatial",
+  "dimensional", "parallel", "alternate", "virtual", "augmented", "enhanced", "amplified", "maximized",
+  "optimized", "refined", "polished", "pristine", "flawless", "perfect", "ideal", "ultimate",
+  "supreme", "prime", "alpha", "beta", "gamma", "delta", "omega", "sigma",
+  "zero", "one", "binary", "hexagonal", "octagonal", "triangular", "spherical", "cubic",
+  "linear", "curved", "twisted", "spiral", "coiled", "woven", "braided", "knotted",
+  "smooth", "rough", "sharp", "blunt", "fine", "coarse", "dense", "sparse",
+  "thick", "thin", "wide", "narrow", "tall", "short", "deep", "shallow",
+  "high", "low", "fast", "slow", "quick", "rapid", "instant", "gradual",
+  "sudden", "smooth", "abrupt", "fluid", "rigid", "flexible", "elastic", "plastic",
+  "ceramic", "glass", "wooden", "stone", "rock", "sand", "clay", "mud",
+  "ice", "snow", "rain", "storm", "wind", "fire", "earth", "air",
+  "light", "dark", "bright", "dim", "clear", "cloudy", "foggy", "misty",
+  "transparent", "opaque", "translucent", "reflective", "refractive", "absorbing", "emitting", "radiating",
+  "pulsing", "beating", "throbbing", "vibrating", "oscillating", "resonating", "echoing", "reverberating",
+  "flowing", "streaming", "rushing", "trickling", "dripping", "splashing", "crashing", "rolling",
+  "spinning", "rotating", "revolving", "orbiting", "circling", "looping", "cycling", "recurring",
+  "emerging", "rising", "ascending", "climbing", "soaring", "floating", "hovering", "gliding",
+  "diving", "plunging", "falling", "descending", "sinking", "settling", "resting", "sleeping",
+  "dreaming", "awakening", "stirring", "moving", "shifting", "changing", "transforming", "evolving"
+];
+
+const nouns = [
+  "cloud", "water", "mountain", "star", "moon", "sun", "ocean", "forest",
+  "valley", "river", "storm", "flame", "crystal", "diamond", "pearl", "gem",
+  "beacon", "tower", "bridge", "garden", "meadow", "harbor", "island", "cascade",
+  "aurora", "nebula", "galaxy", "comet", "meteor", "prism", "echo", "whisper",
+  "dream", "vision", "horizon", "sanctuary", "oasis", "fortress", "citadel", "haven",
+  "realm", "kingdom", "empire", "domain", "territory", "region", "zone", "sector",
+  "district", "quarter", "plaza", "square", "circle", "triangle", "polygon", "sphere",
+  "cube", "pyramid", "cone", "cylinder", "spiral", "helix", "matrix", "grid",
+  "network", "web", "mesh", "lattice", "framework", "structure", "architecture", "design",
+  "pattern", "template", "blueprint", "schema", "model", "prototype", "sample", "specimen",
+  "fragment", "particle", "atom", "molecule", "element", "compound", "mixture", "solution",
+  "formula", "equation", "algorithm", "protocol", "sequence", "series", "chain", "link",
+  "node", "vertex", "edge", "path", "route", "trail", "track", "line",
+  "curve", "arc", "circle", "ring", "loop", "cycle", "orbit", "revolution",
+  "rotation", "spin", "twist", "turn", "bend", "fold", "crease", "wave",
+  "pulse", "beat", "rhythm", "tempo", "frequency", "wavelength", "amplitude", "phase",
+  "signal", "transmission", "broadcast", "message", "code", "cipher", "key", "lock",
+  "vault", "chamber", "room", "hall", "corridor", "passage", "tunnel", "cave",
+  "cavern", "grotto", "alcove", "niche", "corner", "edge", "border", "boundary",
+  "limit", "threshold", "gateway", "portal", "entrance", "exit", "door", "window",
+  "mirror", "lens", "prism", "crystal", "glass", "window", "screen", "display",
+  "interface", "panel", "board", "deck", "platform", "stage", "arena", "field",
+  "ground", "floor", "ceiling", "roof", "wall", "fence", "barrier", "shield",
+  "armor", "weapon", "tool", "instrument", "device", "machine", "engine", "motor",
+  "generator", "reactor", "battery", "cell", "core", "heart", "soul", "spirit",
+  "essence", "nature", "character", "personality", "identity", "signature", "mark", "sign",
+  "symbol", "icon", "emblem", "badge", "token", "coin", "medallion", "trophy",
+  "prize", "reward", "gift", "treasure", "fortune", "wealth", "riches", "jewel",
+  "crown", "throne", "scepter", "staff", "wand", "rod", "pole", "mast",
+  "pillar", "column", "beam", "support", "foundation", "base", "root", "stem",
+  "branch", "leaf", "flower", "petal", "seed", "fruit", "tree", "plant",
+  "herb", "grass", "moss", "fern", "vine", "shrub", "bush", "hedge"
+];
+
+function generateRandomName(): string {
+  const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+  return `${randomAdjective}-${randomNoun}`;
+}
 
 export function useDocumentSamplerForm() {
   const queryClient = useQueryClient();
@@ -104,11 +179,18 @@ export function DocumentSamplerForm() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
     onSubmit,
     localError,
     saveSampleMutation,
   } = useDocumentSamplerForm();
+
+  const handleGenerateName = () => {
+    const randomName = generateRandomName();
+    setValue("name", randomName);
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -119,11 +201,24 @@ export function DocumentSamplerForm() {
           >
             Sample Name
           </label>
-          <Input
-            id="sample-name"
-            placeholder="Sample Name"
-            {...register("name")}
-          />
+          <div className="flex gap-2">
+            <Input
+              id="sample-name"
+              placeholder="Sample Name"
+              {...register("name")}
+              className="flex-1"
+            />
+            <Button
+              type="button"
+              variant="secondary"
+              size="icon"
+              shape="circle"
+              onClick={handleGenerateName}
+              title="Generate random name"
+            >
+              <Bot size={16} />
+            </Button>
+          </div>
           {errors.name && (
             <div className="text-destructive text-xs mt-1">
               {errors.name.message}
