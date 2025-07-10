@@ -31,7 +31,6 @@ export const AddQuestionForm: React.FC<{ sampleId: string }> = ({
 			id: crypto.randomUUID(),
 			text: data.text,
 			type: data.type,
-			category: "custom",
 			generatedBy: "manual",
 			createdAt: new Date(),
 			updatedAt: new Date(),

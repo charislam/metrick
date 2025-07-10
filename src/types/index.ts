@@ -10,7 +10,6 @@ export interface Question {
 	id: string;
 	text: string;
 	type: "answerable" | "non-answerable";
-	category: string;
 	generatedBy: "llm" | "manual";
 	createdAt: Date;
 	updatedAt: Date;

@@ -4,12 +4,12 @@ import type { Question } from "../../types";
 
 export const QuestionReviewCard: React.FC<{
 	question: Pick<Question, "id" | "text" | "type" | "status" | "generatedBy">;
-}> = ({ question }) => {
+	onStatusChange: (id: string, newStatus: "accepted" | "rejected") => void;
+}> = ({ question, onStatusChange }) => {
 	const [editText, setEditText] = useState(question.text);
-	const [status, setStatus] = useState(question.status);
 
-	const handleAccept = () => setStatus("accepted");
-	const handleReject = () => setStatus("rejected");
+	const handleAccept = () => onStatusChange(question.id, "accepted");
+	const handleReject = () => onStatusChange(question.id, "rejected");
 	const handleEdit = (e: React.ChangeEvent<HTMLInputElement>) =>
 		setEditText(e.target.value);
 
@@ -33,19 +33,21 @@ export const QuestionReviewCard: React.FC<{
 			<div className="flex gap-2">
 				<button
 					type="button"
-					className={`px-3 py-1 rounded ${status === "accepted" ? "bg-green-500 text-white" : "bg-gray-200"}`}
+					className={`px-3 py-1 rounded ${question.status === "accepted" ? "bg-green-500 text-white" : "bg-gray-200"}`}
 					onClick={handleAccept}
 				>
 					Accept
 				</button>
 				<button
 					type="button"
-					className={`px-3 py-1 rounded ${status === "rejected" ? "bg-red-500 text-white" : "bg-gray-200"}`}
+					className={`px-3 py-1 rounded ${question.status === "rejected" ? "bg-red-500 text-white" : "bg-gray-200"}`}
 					onClick={handleReject}
 				>
 					Reject
 				</button>
-				<span className="ml-4 text-xs text-gray-400">Status: {status}</span>
+				<span className="ml-4 text-xs text-gray-400">
+					Status: {question.status}
+				</span>
 			</div>
 		</div>
 	);

@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { generateQuestions } from "../../lib/ai-question-generator";
 import { useApiKeyQuery } from "../../lib/api-key";
 import { indexedDB } from "../../lib/indexed-db";
@@ -16,6 +16,8 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 	const [questions, setQuestions] = useState<
 		Pick<Question, "id" | "text" | "type" | "status" | "generatedBy">[]
 	>([]);
+	const [saveSuccess, setSaveSuccess] = useState(false);
+	const queryClient = useQueryClient();
 
 	const { data: apiKey = "", isLoading: apiKeyLoading } = useApiKeyQuery();
 
@@ -65,6 +67,44 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 			setQuestions([...answerableQs, ...nonAnswerableQs]);
 		},
 	});
+
+	// Determine if all questions are reviewed
+	const allReviewed =
+		questions.length > 0 &&
+		questions.every((q) => q.status === "accepted" || q.status === "rejected");
+
+	// Save questions mutation
+	const saveMutation = useMutation({
+		mutationFn: async () => {
+			await Promise.all(
+				questions
+					.filter((q) => q.status === "accepted")
+					.map(async (q) => {
+						await indexedDB.saveQuestion({
+							...q,
+							createdAt: new Date(),
+							updatedAt: new Date(),
+							documentSampleId: sampleId,
+						});
+					}),
+			);
+		},
+		onSuccess: () => {
+			setSaveSuccess(true);
+			setTimeout(() => setSaveSuccess(false), 2000);
+			queryClient.invalidateQueries({ queryKey: ["questions", sampleId] });
+		},
+	});
+
+	// Handler to update question status in parent state
+	const handleStatusChange = (
+		id: string,
+		newStatus: "accepted" | "rejected",
+	) => {
+		setQuestions((prev) =>
+			prev.map((q) => (q.id === id ? { ...q, status: newStatus } : q)),
+		);
+	};
 
 	return (
 		<div className="flex gap-10 p-8 bg-gray-50">
@@ -141,6 +181,27 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 						)}
 						<AddQuestionForm sampleId={sampleId} />
 					</div>
+					{/* Save Questions Button */}
+					<div className="flex items-center gap-4 mb-6">
+						<button
+							type="button"
+							className={`px-6 py-2 rounded-md font-semibold shadow transition text-white ${allReviewed ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-300 cursor-not-allowed"}`}
+							disabled={!allReviewed || saveMutation.isPending}
+							onClick={() => saveMutation.mutate()}
+						>
+							{saveMutation.isPending ? "Saving..." : "Save Questions"}
+						</button>
+						{saveSuccess && (
+							<span className="text-green-600 font-medium">
+								Questions saved!
+							</span>
+						)}
+						{!allReviewed && questions.length > 0 && (
+							<span className="text-sm text-gray-500">
+								All questions must be reviewed before saving.
+							</span>
+						)}
+					</div>
 					<div className="space-y-4">
 						{questions.length === 0 && (
 							<div className="text-center text-gray-400 py-12 text-lg bg-white rounded-xl border border-dashed border-gray-200">
@@ -149,7 +210,11 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 							</div>
 						)}
 						{questions.map((q) => (
-							<QuestionReviewCard key={q.id} question={q} />
+							<QuestionReviewCard
+								key={q.id}
+								question={q}
+								onStatusChange={handleStatusChange}
+							/>
 						))}
 					</div>
 				</div>

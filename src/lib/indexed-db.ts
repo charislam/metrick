@@ -1,9 +1,4 @@
-import {
-	type DBSchema,
-	type IDBPDatabase,
-	type IDBPObjectStore,
-	openDB,
-} from "idb";
+import { type DBSchema, type IDBPDatabase, openDB } from "idb";
 import type { AnnotationSession, DocumentSample, Question } from "../types";
 
 interface EvaluationDB extends DBSchema {
@@ -12,7 +7,6 @@ interface EvaluationDB extends DBSchema {
 		value: Question;
 		indexes: {
 			"by-type": string;
-			"by-category": string;
 			"by-documentSampleId": string;
 		};
 	};
@@ -53,7 +47,6 @@ class IndexedDBManager {
 						keyPath: "id",
 					});
 					questionStore.createIndex("by-type", "type");
-					questionStore.createIndex("by-category", "category");
 					questionStore.createIndex("by-documentSampleId", "documentSampleId");
 				}
 				if (!db.objectStoreNames.contains("documentSamples")) {
