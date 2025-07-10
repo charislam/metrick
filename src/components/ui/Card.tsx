@@ -3,20 +3,20 @@ import { forwardRef } from "react";
 import { cn } from "./cn";
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode;
+	children: ReactNode;
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ children, className = "", ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={cn("bg-white rounded shadow p-4", className)}
-        {...props}
-      >
-        {children}
-      </div>
-    );
-  }
+	({ children, className = "", ...props }, ref) => {
+		return (
+			<div
+				ref={ref}
+				className={cn("bg-white rounded shadow p-4", className)}
+				{...props}
+			>
+				{children}
+			</div>
+		);
+	},
 );
 Card.displayName = "Card";

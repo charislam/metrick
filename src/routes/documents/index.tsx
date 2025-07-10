@@ -3,20 +3,20 @@ import { DocumentCollectionStats } from "../../components/document/DocumentColle
 import { DocumentSampler } from "../../components/document/DocumentSampler";
 
 function DocumentsPage() {
-  return (
-    <div className="flex flex-col flex-1 bg-muted/50 py-12 px-4 justify-center items-center">
-      <div className="w-full max-w-3xl space-y-10">
-        <section className="bg-white rounded-xl shadow-lg p-8 border border-muted-200">
-          <DocumentSampler />
-        </section>
-        <section className="bg-white rounded-xl shadow-lg p-8 border border-muted-200">
-          <DocumentCollectionStats />
-        </section>
-      </div>
-    </div>
-  );
+	return (
+		<div className="flex flex-col flex-1 bg-muted/50 py-12 px-4 justify-center items-center">
+			<div className="w-full max-w-3xl space-y-10">
+				<section className="bg-white rounded-xl shadow-lg p-8 border border-muted-200">
+					<DocumentSampler />
+				</section>
+				<section className="bg-white rounded-xl shadow-lg p-8 border border-muted-200">
+					<DocumentCollectionStats />
+				</section>
+			</div>
+		</div>
+	);
 }
 
 export const Route = createFileRoute("/documents/")({
-  component: DocumentsPage,
+	component: DocumentsPage,
 });

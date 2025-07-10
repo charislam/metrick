@@ -1,0 +1,8 @@
+`$env` where {
+    $env <: `import.meta.env`,
+    register_diagnostic(
+        span = $env,
+        message = "Reading directly from import.meta.env is forbidden. All env variable access must go through the ./lib/env.ts file for validation.",
+        severity = "error"
+    )
+}
