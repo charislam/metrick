@@ -15,8 +15,15 @@ export const QuestionReviewCard: React.FC<{
 
 	return (
 		<div className="border rounded p-4 mb-3 bg-white shadow">
-			<div className="mb-2 text-sm text-gray-500">
-				Source: {question.generatedBy}
+			<div className="flex items-center justify-between mb-2">
+				<div className="text-sm text-gray-500">
+					Source: {question.generatedBy}
+				</div>
+				<span
+					className={`px-2 py-0.5 rounded text-xs font-semibold ${question.type === "answerable" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}
+				>
+					{question.type === "answerable" ? "Answerable" : "Non-Answerable"}
+				</span>
 			</div>
 			<input
 				className="w-full border rounded px-2 py-1 mb-2"
