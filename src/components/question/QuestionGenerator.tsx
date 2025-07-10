@@ -1,99 +1,33 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type React from "react";
 import { useState } from "react";
-import { generateQuestions } from "../../lib/ai-question-generator";
-import { useApiKeyQuery } from "../../lib/api-key";
-import { indexedDB } from "../../lib/indexed-db";
-import type { DocumentSample, Question } from "../../types";
+import type { Document } from "../../types";
 import { AddQuestionForm } from "./AddQuestionForm";
-import { QuestionReviewCard } from "./QuestionReviewCard";
+import { useQuestionGeneration } from "./hooks/useQuestionGeneration";
+import { useSaveQuestions } from "./hooks/useSaveQuestions";
+import { QuestionGenerationControls } from "./QuestionGenerationControls";
+import { QuestionListReview } from "./QuestionListReview";
 
 export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 	sampleId,
 }) => {
-	const [answerableCount, setAnswerableCount] = useState(12);
-	const [nonAnswerableCount, setNonAnswerableCount] = useState(8);
-	const [questions, setQuestions] = useState<
-		Pick<Question, "id" | "text" | "type" | "status" | "generatedBy">[]
-	>([]);
-	const [saveSuccess, setSaveSuccess] = useState(false);
-	const queryClient = useQueryClient();
-
-	const { data: apiKey = "", isLoading: apiKeyLoading } = useApiKeyQuery();
-
 	const {
-		data: sample,
-		isLoading: sampleLoading,
-		isError: sampleError,
-	} = useQuery<DocumentSample | null>({
-		queryKey: ["document-sample", sampleId],
-		queryFn: async () => (await indexedDB.getDocumentSample(sampleId)) ?? null,
-	});
-
-	const generateMutation = useMutation({
-		mutationFn: async () => {
-			if (!apiKey)
-				throw new Error(
-					"Missing OpenAI API key. Configure your API key in Settings.",
-				);
-			const sample = await indexedDB.getDocumentSample(sampleId);
-			if (!sample)
-				throw new Error(
-					`Expected to find sample for ID ${sampleId} but none found`,
-				);
-
-			const { answerable, nonAnswerable } = (
-				await generateQuestions(
-					sample.documents,
-					{ answerableCount, nonAnswerableCount },
-					apiKey,
-				)
-			).unwrapRaw();
-
-			const answerableQs = answerable.map((text) => ({
-				id: crypto.randomUUID(),
-				text,
-				type: "answerable" as const,
-				status: "pending" as const,
-				generatedBy: "llm" as const,
-			}));
-			const nonAnswerableQs = nonAnswerable.map((text) => ({
-				id: crypto.randomUUID(),
-				text,
-				type: "non-answerable" as const,
-				status: "pending" as const,
-				generatedBy: "llm" as const,
-			}));
-			setQuestions([...answerableQs, ...nonAnswerableQs]);
-		},
-	});
-
-	// Determine if all questions are reviewed
-	const allReviewed =
-		questions.length > 0 &&
-		questions.every((q) => q.status === "accepted" || q.status === "rejected");
-
-	// Save questions mutation
-	const saveMutation = useMutation({
-		mutationFn: async () => {
-			await Promise.all(
-				questions
-					.filter((q) => q.status === "accepted")
-					.map(async (q) => {
-						await indexedDB.saveQuestion({
-							...q,
-							createdAt: new Date(),
-							updatedAt: new Date(),
-							documentSampleId: sampleId,
-						});
-					}),
-			);
-		},
-		onSuccess: () => {
-			setSaveSuccess(true);
-			setTimeout(() => setSaveSuccess(false), 2000);
-			queryClient.invalidateQueries({ queryKey: ["questions", sampleId] });
-		},
+		answerableCount,
+		setAnswerableCount,
+		nonAnswerableCount,
+		setNonAnswerableCount,
+		questions,
+		setQuestions,
+		apiKey,
+		apiKeyLoading,
+		sampleLoading,
+		sampleError,
+		generateMutation,
+		sample,
+	} = useQuestionGeneration(sampleId);
+	const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
+	const saveMutation = useSaveQuestions({
+		questions,
+		sampleId,
+		setSaveSuccess,
 	});
 
 	// Handler to update question status in parent state
@@ -101,10 +35,21 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 		id: string,
 		newStatus: "accepted" | "rejected",
 	) => {
-		setQuestions((prev) =>
+		setQuestions((prev: typeof questions) =>
 			prev.map((q) => (q.id === id ? { ...q, status: newStatus } : q)),
 		);
 	};
+
+	// Handler to update question text in parent state
+	const handleTextChange = (id: string, newText: string) => {
+		setQuestions((prev: typeof questions) =>
+			prev.map((q) => (q.id === id ? { ...q, text: newText } : q)),
+		);
+	};
+
+	const allReviewed =
+		questions.length > 0 &&
+		questions.every((q) => q.status === "accepted" || q.status === "rejected");
 
 	return (
 		<div className="flex gap-10 p-8 bg-gray-50">
@@ -114,64 +59,16 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 						<h2 className="text-2xl font-bold mb-4 text-gray-900">
 							Generate AI Questions
 						</h2>
-						<div className="flex flex-wrap gap-6 items-end mb-6">
-							<div>
-								<label
-									htmlFor="answerable-count"
-									className="block text-sm font-medium text-gray-700 mb-1"
-								>
-									Answerable
-								</label>
-								<input
-									id="answerable-count"
-									type="number"
-									min={0}
-									value={answerableCount}
-									onChange={(e) => setAnswerableCount(Number(e.target.value))}
-									className="border border-gray-300 rounded-md px-3 py-2 w-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
-								/>
-							</div>
-							<div>
-								<label
-									htmlFor="non-answerable-count"
-									className="block text-sm font-medium text-gray-700 mb-1"
-								>
-									Non-Answerable
-								</label>
-								<input
-									id="non-answerable-count"
-									type="number"
-									min={0}
-									value={nonAnswerableCount}
-									onChange={(e) =>
-										setNonAnswerableCount(Number(e.target.value))
-									}
-									className="border border-gray-300 rounded-md px-3 py-2 w-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
-								/>
-							</div>
-							<div className="flex-1" />
-							<div className="flex items-center gap-2">
-								{apiKeyLoading ? (
-									<span className="text-gray-500">Loading API key...</span>
-								) : !apiKey ? (
-									<span className="text-red-500 text-sm">
-										Missing OpenAI API key. Configure your API key in Settings.
-									</span>
-								) : (
-									<span className="text-green-600 text-sm font-medium">
-										API key loaded from settings
-									</span>
-								)}
-								<button
-									type="button"
-									className="px-5 py-2 bg-green-600 text-white rounded-md font-semibold shadow hover:bg-green-700 transition"
-									onClick={() => generateMutation.mutate()}
-									disabled={!apiKey || generateMutation.isPending}
-								>
-									{generateMutation.isPending ? "Generating..." : "Generate"}
-								</button>
-							</div>
-						</div>
+						<QuestionGenerationControls
+							answerableCount={answerableCount}
+							setAnswerableCount={setAnswerableCount}
+							nonAnswerableCount={nonAnswerableCount}
+							setNonAnswerableCount={setNonAnswerableCount}
+							apiKey={apiKey}
+							apiKeyLoading={apiKeyLoading}
+							onGenerate={() => generateMutation.mutate()}
+							isGenerating={generateMutation.isPending}
+						/>
 						{generateMutation.isError && (
 							<div className="text-red-500 mb-2">
 								{generateMutation.error instanceof Error
@@ -196,27 +93,24 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 								Questions saved!
 							</span>
 						)}
+						{saveMutation.isError && (
+							<span className="text-red-500 text-sm">
+								{saveMutation.error instanceof Error
+									? saveMutation.error.message
+									: String(saveMutation.error)}
+							</span>
+						)}
 						{!allReviewed && questions.length > 0 && (
 							<span className="text-sm text-gray-500">
 								All questions must be reviewed before saving.
 							</span>
 						)}
 					</div>
-					<div className="space-y-4">
-						{questions.length === 0 && (
-							<div className="text-center text-gray-400 py-12 text-lg bg-white rounded-xl border border-dashed border-gray-200">
-								No questions generated yet. Use the controls above to generate
-								or add questions.
-							</div>
-						)}
-						{questions.map((q) => (
-							<QuestionReviewCard
-								key={q.id}
-								question={q}
-								onStatusChange={handleStatusChange}
-							/>
-						))}
-					</div>
+					<QuestionListReview
+						questions={questions}
+						onStatusChange={handleStatusChange}
+						onTextChange={handleTextChange}
+					/>
 				</div>
 			</div>
 			<aside className="w-96 shrink-0">
@@ -238,7 +132,7 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 									{sample.description}
 								</div>
 								<ul className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-									{sample.documents.map((doc) => (
+									{sample.documents.map((doc: Document) => (
 										<li
 											key={doc.id}
 											className="border border-gray-100 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 transition"

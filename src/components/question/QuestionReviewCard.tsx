@@ -1,17 +1,16 @@
 import type React from "react";
-import { useState } from "react";
+import type { ChangeEvent } from "react";
 import type { Question } from "../../types";
 
 export const QuestionReviewCard: React.FC<{
 	question: Pick<Question, "id" | "text" | "type" | "status" | "generatedBy">;
 	onStatusChange: (id: string, newStatus: "accepted" | "rejected") => void;
-}> = ({ question, onStatusChange }) => {
-	const [editText, setEditText] = useState(question.text);
-
+	onTextChange: (id: string, newText: string) => void;
+}> = ({ question, onStatusChange, onTextChange }) => {
 	const handleAccept = () => onStatusChange(question.id, "accepted");
 	const handleReject = () => onStatusChange(question.id, "rejected");
-	const handleEdit = (e: React.ChangeEvent<HTMLInputElement>) =>
-		setEditText(e.target.value);
+	const handleEdit = (e: ChangeEvent<HTMLInputElement>) =>
+		onTextChange(question.id, e.target.value);
 
 	return (
 		<div className="border rounded p-4 mb-3 bg-white shadow">
@@ -27,7 +26,7 @@ export const QuestionReviewCard: React.FC<{
 			</div>
 			<input
 				className="w-full border rounded px-2 py-1 mb-2"
-				value={editText}
+				value={question.text}
 				onChange={handleEdit}
 			/>
 			<div className="flex gap-2">
