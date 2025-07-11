@@ -117,7 +117,23 @@
 	* {
 		@apply border-border outline-ring/50;
 	}
+
 	body {
 		@apply bg-background text-foreground;
+	}
+
+	/* Ensure smooth transitions for theme changes */
+	html {
+		transition: background-color 0.3s ease, color 0.3s ease;
+	}
+
+	/* Improve dark mode for navigation and links */
+	nav a {
+		@apply text-foreground hover:text-primary transition-colors;
+	}
+
+	/* Ensure buttons have proper contrast in both themes */
+	button {
+		@apply transition-colors;
 	}
 }
