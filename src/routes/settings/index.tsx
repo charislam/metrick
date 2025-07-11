@@ -49,10 +49,10 @@ export default function SettingsPage() {
 	};
 
 	return (
-		<div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-			<h1 className="text-2xl font-bold mb-4">Settings</h1>
+		<div className="max-w-lg min-w-md mx-auto mt-10 p-6 bg-card rounded shadow border border-muted-200 dark:border-border/60 transition-colors">
+			<h1 className="text-2xl font-bold mb-4 text-foreground">Settings</h1>
 			<form onSubmit={handleSave} className="space-y-4">
-				<Label htmlFor="api-key" className="block">
+				<Label htmlFor="api-key" className="block text-foreground">
 					OpenAI API Key
 				</Label>
 				<Input
@@ -77,8 +77,10 @@ export default function SettingsPage() {
 						Delete Key
 					</Button>
 				</div>
-				{justSaved && <div className="text-green-600">Key saved!</div>}
-				<div className="text-gray-600 mt-2">
+				{justSaved && (
+					<div className="text-green-600 dark:text-green-400">Key saved!</div>
+				)}
+				<div className="text-muted-foreground mt-2">
 					{isLoading
 						? "Loading keys..."
 						: apiKey

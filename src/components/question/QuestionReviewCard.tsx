@@ -16,9 +16,9 @@ export const QuestionReviewCard: React.FC<{
 		onTextChange(question.id, e.target.value);
 
 	return (
-		<div className="border rounded p-4 mb-3 bg-white shadow">
+		<div className="border rounded p-4 mb-3 bg-card dark:bg-card shadow border-muted-200 dark:border-border/60 transition-colors">
 			<div className="flex items-center justify-between mb-2">
-				<div className="text-sm text-gray-500">
+				<div className="text-sm text-muted-foreground">
 					Source: {question.generatedBy}
 				</div>
 				<Badge
@@ -44,7 +44,7 @@ export const QuestionReviewCard: React.FC<{
 				>
 					Reject
 				</Button>
-				<span className="ml-4 text-xs text-gray-400">
+				<span className="ml-4 text-xs text-muted-foreground">
 					Status: {question.status}
 				</span>
 			</div>

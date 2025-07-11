@@ -18,7 +18,7 @@ export const QuestionListReview: React.FC<QuestionListReviewProps> = ({
 }) => (
 	<div className="space-y-4">
 		{questions.length === 0 ? (
-			<div className="text-center text-gray-400 py-12 text-lg bg-white rounded-xl border border-dashed border-gray-200">
+			<div className="text-center text-muted-foreground py-12 text-lg bg-card rounded-xl border border-dashed border-muted-200 dark:border-border/60 transition-colors">
 				No questions generated yet. Use the controls above to generate or add
 				questions.
 			</div>

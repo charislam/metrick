@@ -55,11 +55,11 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 		questions.every((q) => q.status === "accepted" || q.status === "rejected");
 
 	return (
-		<div className="flex gap-10 p-8 bg-gray-50">
+		<div className="flex gap-10 p-8 bg-muted/50 dark:bg-background transition-colors">
 			<div className="flex-1 min-w-0">
 				<div className="max-w-2xl mx-auto">
-					<div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-200">
-						<h2 className="text-2xl font-bold mb-4 text-gray-900">
+					<div className="bg-card rounded-xl shadow-lg p-8 mb-8 border border-muted-200 dark:border-border/60 transition-colors">
+						<h2 className="text-2xl font-bold mb-4 text-foreground">
 							Generate AI Questions
 						</h2>
 						<QuestionGenerationControls
@@ -73,7 +73,7 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 							isGenerating={generateMutation.isPending}
 						/>
 						{generateMutation.isError && (
-							<div className="text-red-500 mb-2">
+							<div className="text-red-500 dark:text-red-400 mb-2">
 								{generateMutation.error instanceof Error
 									? generateMutation.error.message
 									: String(generateMutation.error)}
@@ -93,19 +93,19 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 							{saveMutation.isPending ? "Saving..." : "Save Questions"}
 						</Button>
 						{saveSuccess && (
-							<span className="text-green-600 font-medium">
+							<span className="text-green-600 dark:text-green-400 font-medium">
 								Questions saved!
 							</span>
 						)}
 						{saveMutation.isError && (
-							<span className="text-red-500 text-sm">
+							<span className="text-red-500 dark:text-red-400 text-sm">
 								{saveMutation.error instanceof Error
 									? saveMutation.error.message
 									: String(saveMutation.error)}
 							</span>
 						)}
 						{!allReviewed && questions.length > 0 && (
-							<span className="text-sm text-gray-500">
+							<span className="text-sm text-muted-foreground">
 								All questions must be reviewed before saving.
 							</span>
 						)}
@@ -119,11 +119,11 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 			</div>
 			<aside className="w-96 shrink-0 sticky top-8 h-[calc(100vh-10rem)]">
 				<Card className="p-0 overflow-hidden h-full flex flex-col gap-0">
-					<div className="bg-muted/50 px-6 py-4 border-b shrink-0">
-						<h3 className="font-semibold text-lg mb-1 text-gray-900">
+					<div className="bg-muted/50 dark:bg-muted/30 px-6 py-4 border-b border-muted-200 dark:border-border/60 shrink-0 transition-colors">
+						<h3 className="font-semibold text-lg mb-1 text-foreground">
 							Document Sample
 						</h3>
-						<div className="font-bold text-base text-gray-800">
+						<div className="font-bold text-base text-foreground">
 							{sample?.name}
 						</div>
 						{sample?.description && (
@@ -133,11 +133,11 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 						)}
 					</div>
 					{sampleLoading ? (
-						<div className="text-xs text-gray-400 px-6 py-4">
+						<div className="text-xs text-muted-foreground px-6 py-4">
 							Loading sample...
 						</div>
 					) : sampleError ? (
-						<div className="text-xs text-red-500 px-6 py-4">
+						<div className="text-xs text-red-500 dark:text-red-400 px-6 py-4">
 							Error loading sample.
 						</div>
 					) : sample ? (
@@ -145,9 +145,9 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 							{sample.documents.map((doc: Document) => (
 								<li
 									key={doc.id}
-									className="bg-white border border-muted-200 rounded-lg p-4 shadow-sm hover:shadow-md transition flex flex-col gap-1"
+									className="bg-card dark:bg-card border border-muted-200 dark:border-border/60 rounded-lg p-4 shadow-sm hover:shadow-md transition flex flex-col gap-1"
 								>
-									<div className="font-medium text-base mb-2 text-gray-900 truncate">
+									<div className="font-medium text-base mb-2 text-foreground truncate">
 										{doc.title}
 									</div>
 									<Badge variant="secondary" className="w-fit capitalize mb-3">
@@ -161,7 +161,7 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 							))}
 						</ul>
 					) : (
-						<div className="text-xs text-gray-400 px-6 py-4">
+						<div className="text-xs text-muted-foreground px-6 py-4">
 							No sample found.
 						</div>
 					)}

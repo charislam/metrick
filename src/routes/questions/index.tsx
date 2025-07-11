@@ -43,8 +43,8 @@ const QuestionsPage = () => {
 	}
 	if (isError || validSample === false) {
 		return (
-			<div className="p-4">
-				<div className="text-red-500 mb-2">
+			<div className="p-4 bg-card text-foreground rounded shadow transition-colors">
+				<div className="text-red-500 dark:text-red-400 mb-2">
 					{error instanceof Error
 						? error.message
 						: "Invalid sample ID. Please select a valid sample."}

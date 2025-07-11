@@ -15,7 +15,7 @@ export function Separator({
 	return (
 		<div
 			className={cn(
-				"bg-border",
+				"bg-border dark:bg-border/60",
 				orientation === "horizontal"
 					? thickness || "h-px w-full"
 					: thickness || "w-px h-full",
