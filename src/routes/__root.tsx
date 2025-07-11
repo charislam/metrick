@@ -1,4 +1,4 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 export const Route = createRootRoute({
@@ -30,6 +30,15 @@ export const Route = createRootRoute({
 					}}
 				>
 					Questions
+				</Link>
+				{" | "}
+				<Link
+					to="/annotation"
+					activeProps={{
+						className: "font-bold underline",
+					}}
+				>
+					Annotation
 				</Link>
 				{" | "}
 				<Link

@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AnnotationRouteImport } from './routes/annotation'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as QuestionsIndexRouteImport } from './routes/questions/index'
 import { Route as DocumentsIndexRouteImport } from './routes/documents/index'
 
+const AnnotationRoute = AnnotationRouteImport.update({
+  id: '/annotation',
+  path: '/annotation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +43,14 @@ const DocumentsIndexRoute = DocumentsIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/annotation': typeof AnnotationRoute
   '/documents': typeof DocumentsIndexRoute
   '/questions': typeof QuestionsIndexRoute
   '/settings': typeof SettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/annotation': typeof AnnotationRoute
   '/documents': typeof DocumentsIndexRoute
   '/questions': typeof QuestionsIndexRoute
   '/settings': typeof SettingsIndexRoute
@@ -50,20 +58,28 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/annotation': typeof AnnotationRoute
   '/documents/': typeof DocumentsIndexRoute
   '/questions/': typeof QuestionsIndexRoute
   '/settings/': typeof SettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/documents' | '/questions' | '/settings'
+  fullPaths: '/' | '/annotation' | '/documents' | '/questions' | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/documents' | '/questions' | '/settings'
-  id: '__root__' | '/' | '/documents/' | '/questions/' | '/settings/'
+  to: '/' | '/annotation' | '/documents' | '/questions' | '/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/annotation'
+    | '/documents/'
+    | '/questions/'
+    | '/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnnotationRoute: typeof AnnotationRoute
   DocumentsIndexRoute: typeof DocumentsIndexRoute
   QuestionsIndexRoute: typeof QuestionsIndexRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
@@ -71,6 +87,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/annotation': {
+      id: '/annotation'
+      path: '/annotation'
+      fullPath: '/annotation'
+      preLoaderRoute: typeof AnnotationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +127,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnnotationRoute: AnnotationRoute,
   DocumentsIndexRoute: DocumentsIndexRoute,
   QuestionsIndexRoute: QuestionsIndexRoute,
   SettingsIndexRoute: SettingsIndexRoute,
