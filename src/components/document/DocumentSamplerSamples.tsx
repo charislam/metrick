@@ -1,10 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Info, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { indexedDB } from "../../lib/indexed-db";
-import type { DocumentSample } from "../../types";
-import { Button } from "../ui/Button";
-import { Card } from "../ui/Card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
 	Dialog,
 	DialogClose,
@@ -14,7 +13,9 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "../ui/Dialog";
+} from "@/components/ui/dialog";
+import { indexedDB } from "../../lib/indexed-db";
+import type { DocumentSample } from "../../types";
 
 export function useDocumentSamples() {
 	const {
@@ -45,12 +46,7 @@ function DocumentSampleDeleteButton({
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogTrigger asChild>
-				<Button
-					variant="secondary"
-					size="icon"
-					shape="circle"
-					aria-label="Delete sample"
-				>
+				<Button variant="circle" size="icon" aria-label="Delete sample">
 					<Trash2 className="w-5 h-5" />
 				</Button>
 			</DialogTrigger>
@@ -63,7 +59,7 @@ function DocumentSampleDeleteButton({
 					</DialogDescription>
 				</DialogHeader>
 				<DialogFooter>
-					<Button variant="primary" onClick={onConfirm} disabled={loading}>
+					<Button variant="default" onClick={onConfirm} disabled={loading}>
 						Confirm
 					</Button>
 					<DialogClose asChild>
@@ -101,23 +97,36 @@ export function DocumentSamplerSamples() {
 			{samples.map((sample) => (
 				<Card
 					key={sample.id}
-					className="border border-muted-200 hover:shadow-md transition-shadow"
+					className="border border-muted-200 hover:shadow-md transition-shadow p-0 overflow-hidden"
 				>
-					<div className="font-bold text-lg mb-1">{sample.name}</div>
-					<div className="text-sm text-muted-foreground mb-1">
-						{sample.description}
+					<div className="bg-muted/50 px-6 py-3 flex items-center justify-between">
+						<div className="font-bold text-lg">{sample.name}</div>
+						<div className="flex gap-2">
+							<Badge variant="secondary">
+								Size: {sample.samplingCriteria.sampleSize}
+							</Badge>
+							<Badge variant="default">
+								Guide: {sample.samplingCriteria.contentTypeDistribution.guide}
+							</Badge>
+							<Badge variant="default">
+								Reference:{" "}
+								{sample.samplingCriteria.contentTypeDistribution.reference}
+							</Badge>
+							<Badge variant="default">
+								Troubleshooting:{" "}
+								{
+									sample.samplingCriteria.contentTypeDistribution
+										.troubleshooting
+								}
+							</Badge>
+						</div>
 					</div>
-					<div className="text-xs text-muted-foreground mb-2">
-						<span className="font-medium">Size:</span>{" "}
-						{sample.samplingCriteria.sampleSize} &bull;{" "}
-						<span className="font-medium">Guide:</span>{" "}
-						{sample.samplingCriteria.contentTypeDistribution.guide},{" "}
-						<span className="font-medium">Reference:</span>{" "}
-						{sample.samplingCriteria.contentTypeDistribution.reference},{" "}
-						<span className="font-medium">Troubleshooting:</span>{" "}
-						{sample.samplingCriteria.contentTypeDistribution.troubleshooting}
-					</div>
-					<div className="flex gap-2 mt-2">
+					{sample.description && (
+						<div className="px-6 pt-2 pb-1 text-muted-foreground text-sm">
+							{sample.description}
+						</div>
+					)}
+					<div className="flex justify-end gap-2 px-6 pb-4">
 						<DocumentSampleDeleteButton
 							sample={sample}
 							open={deleteId === sample.id}
@@ -128,18 +137,16 @@ export function DocumentSamplerSamples() {
 							loading={deleteMutation.isPending}
 						/>
 						<Button
-							variant="secondary"
+							variant="circle"
 							size="icon"
-							shape="circle"
 							onClick={() => alert(`Sample info for: ${sample.name}`)}
 							aria-label="Sample info"
 						>
 							<Info className="w-5 h-5" />
 						</Button>
 						<Button
-							variant="primary"
+							variant="circle"
 							size="icon"
-							shape="circle"
 							onClick={() => alert(`Annotate sample: ${sample.name}`)}
 							aria-label="Annotate sample"
 						>

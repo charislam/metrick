@@ -1,5 +1,8 @@
 import type React from "react";
 import type { ChangeEvent } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import type { Question } from "../../types";
 
 export const QuestionReviewCard: React.FC<{
@@ -18,32 +21,29 @@ export const QuestionReviewCard: React.FC<{
 				<div className="text-sm text-gray-500">
 					Source: {question.generatedBy}
 				</div>
-				<span
-					className={`px-2 py-0.5 rounded text-xs font-semibold ${question.type === "answerable" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}
+				<Badge
+					variant={question.type === "answerable" ? "default" : "secondary"}
+					className="ml-2"
 				>
 					{question.type === "answerable" ? "Answerable" : "Non-Answerable"}
-				</span>
+				</Badge>
 			</div>
-			<input
-				className="w-full border rounded px-2 py-1 mb-2"
-				value={question.text}
-				onChange={handleEdit}
-			/>
+			<Input className="mb-2" value={question.text} onChange={handleEdit} />
 			<div className="flex gap-2">
-				<button
+				<Button
 					type="button"
-					className={`px-3 py-1 rounded ${question.status === "accepted" ? "bg-green-500 text-white" : "bg-gray-200"}`}
+					variant={question.status === "accepted" ? "default" : "outline"}
 					onClick={handleAccept}
 				>
 					Accept
-				</button>
-				<button
+				</Button>
+				<Button
 					type="button"
-					className={`px-3 py-1 rounded ${question.status === "rejected" ? "bg-red-500 text-white" : "bg-gray-200"}`}
+					variant={question.status === "rejected" ? "destructive" : "outline"}
 					onClick={handleReject}
 				>
 					Reject
-				</button>
+				</Button>
 				<span className="ml-4 text-xs text-gray-400">
 					Status: {question.status}
 				</span>

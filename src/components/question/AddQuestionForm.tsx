@@ -1,6 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { indexedDB } from "../../lib/indexed-db";
 
 const questionSchema = z.object({
@@ -18,6 +28,8 @@ export const AddQuestionForm: React.FC<{ sampleId: string }> = ({
 		handleSubmit,
 		reset,
 		formState: { errors, isSubmitting },
+		setValue,
+		watch,
 	} = useForm<QuestionFormValues>({
 		resolver: zodResolver(questionSchema),
 		defaultValues: {
@@ -25,6 +37,8 @@ export const AddQuestionForm: React.FC<{ sampleId: string }> = ({
 			type: "answerable",
 		},
 	});
+
+	const type = watch("type");
 
 	const onSubmit = async (data: QuestionFormValues) => {
 		await indexedDB.saveQuestion({
@@ -46,8 +60,8 @@ export const AddQuestionForm: React.FC<{ sampleId: string }> = ({
 			className="flex gap-2 items-center mb-2"
 		>
 			<div className="flex flex-col">
-				<input
-					className="border rounded px-2 py-1 w-64"
+				<Input
+					className="w-64"
 					placeholder="Add custom question..."
 					{...register("text")}
 				/>
@@ -56,21 +70,30 @@ export const AddQuestionForm: React.FC<{ sampleId: string }> = ({
 				)}
 			</div>
 			<div className="flex flex-col">
-				<select className="border rounded px-2 py-1" {...register("type")}>
-					<option value="answerable">Answerable</option>
-					<option value="non-answerable">Non-Answerable</option>
-				</select>
+				<Label htmlFor="type" className="sr-only">
+					Type
+				</Label>
+				<Select
+					value={type}
+					onValueChange={(value) => {
+						setValue("type", value as "answerable" | "non-answerable");
+					}}
+				>
+					<SelectTrigger id="type">
+						<SelectValue placeholder="Select type" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="answerable">Answerable</SelectItem>
+						<SelectItem value="non-answerable">Non-Answerable</SelectItem>
+					</SelectContent>
+				</Select>
 				{errors.type && (
 					<span className="text-xs text-red-500">{errors.type.message}</span>
 				)}
 			</div>
-			<button
-				type="submit"
-				className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-				disabled={isSubmitting}
-			>
+			<Button type="submit" disabled={isSubmitting}>
 				Add
-			</button>
+			</Button>
 		</form>
 	);
 };

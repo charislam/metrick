@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { fetchAllDocuments } from "../../lib/supabase";
-import { Button } from "../ui/Button";
 
 export function DocumentCollectionStats() {
 	const {

@@ -6,7 +6,10 @@
 		"noEmit": true,
 		"jsx": "react-jsx",
 		"module": "ESNext",
-		"moduleResolution": "node"
+		"moduleResolution": "node",
+		"paths": {
+			"@/*": ["./src/*"]
+		}
 	},
 	"include": ["src"],
 	"exclude": ["node_modules", "dist"]

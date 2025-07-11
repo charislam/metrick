@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import type { Document } from "../../types";
 import { AddQuestionForm } from "./AddQuestionForm";
 import { useQuestionGeneration } from "./hooks/useQuestionGeneration";
@@ -80,14 +83,15 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 					</div>
 					{/* Save Questions Button */}
 					<div className="flex items-center gap-4 mb-6">
-						<button
+						<Button
 							type="button"
-							className={`px-6 py-2 rounded-md font-semibold shadow transition text-white ${allReviewed ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-300 cursor-not-allowed"}`}
+							className="px-6"
+							variant={allReviewed ? "default" : "secondary"}
 							disabled={!allReviewed || saveMutation.isPending}
 							onClick={() => saveMutation.mutate()}
 						>
 							{saveMutation.isPending ? "Saving..." : "Save Questions"}
-						</button>
+						</Button>
 						{saveSuccess && (
 							<span className="text-green-600 font-medium">
 								Questions saved!
@@ -113,49 +117,55 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 					/>
 				</div>
 			</div>
-			<aside className="w-96 shrink-0">
-				<div className="sticky top-8">
-					<div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-						<h3 className="font-semibold text-lg mb-2 text-gray-900">
+			<aside className="w-96 shrink-0 sticky top-8 h-[calc(100vh-10rem)]">
+				<Card className="p-0 overflow-hidden h-full flex flex-col gap-0">
+					<div className="bg-muted/50 px-6 py-4 border-b shrink-0">
+						<h3 className="font-semibold text-lg mb-1 text-gray-900">
 							Document Sample
 						</h3>
-						{sampleLoading ? (
-							<div className="text-xs text-gray-400">Loading sample...</div>
-						) : sampleError ? (
-							<div className="text-xs text-red-500">Error loading sample.</div>
-						) : sample ? (
-							<div>
-								<div className="font-bold mb-1 text-base text-gray-800">
-									{sample.name}
-								</div>
-								<div className="text-xs text-muted-foreground mb-4 text-gray-500">
-									{sample.description}
-								</div>
-								<ul className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-									{sample.documents.map((doc: Document) => (
-										<li
-											key={doc.id}
-											className="border border-gray-100 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 transition"
-										>
-											<div className="font-medium text-sm mb-1 text-gray-900 truncate">
-												{doc.title}
-											</div>
-											<div className="text-xs text-blue-700 mb-1 capitalize">
-												{doc.contentType}
-											</div>
-											<div className="text-xs text-gray-700 line-clamp-4 whitespace-pre-line">
-												{doc.content.slice(0, 240)}
-												{doc.content.length > 240 ? "..." : ""}
-											</div>
-										</li>
-									))}
-								</ul>
+						<div className="font-bold text-base text-gray-800">
+							{sample?.name}
+						</div>
+						{sample?.description && (
+							<div className="text-xs text-muted-foreground mt-1">
+								{sample.description}
 							</div>
-						) : (
-							<div className="text-xs text-gray-400">No sample found.</div>
 						)}
 					</div>
-				</div>
+					{sampleLoading ? (
+						<div className="text-xs text-gray-400 px-6 py-4">
+							Loading sample...
+						</div>
+					) : sampleError ? (
+						<div className="text-xs text-red-500 px-6 py-4">
+							Error loading sample.
+						</div>
+					) : sample ? (
+						<ul className="space-y-4 flex-1 min-h-0 overflow-y-auto px-6 py-4">
+							{sample.documents.map((doc: Document) => (
+								<li
+									key={doc.id}
+									className="bg-white border border-muted-200 rounded-lg p-4 shadow-sm hover:shadow-md transition flex flex-col gap-1"
+								>
+									<div className="font-medium text-base mb-2 text-gray-900 truncate">
+										{doc.title}
+									</div>
+									<Badge variant="secondary" className="w-fit capitalize mb-3">
+										{doc.contentType}
+									</Badge>
+									<div className="text-xs text-muted-foreground font-mono line-clamp-4 whitespace-pre-line">
+										{doc.content.slice(0, 240)}
+										{doc.content.length > 240 ? "..." : ""}
+									</div>
+								</li>
+							))}
+						</ul>
+					) : (
+						<div className="text-xs text-gray-400 px-6 py-4">
+							No sample found.
+						</div>
+					)}
+				</Card>
 			</aside>
 		</div>
 	);

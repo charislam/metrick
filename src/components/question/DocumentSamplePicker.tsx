@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
 import { indexedDB } from "../../lib/indexed-db";
 import type { DocumentSample } from "../../types";
 
@@ -33,15 +34,16 @@ export const DocumentSamplePicker: React.FC = () => {
 			<ul>
 				{samples.map((sample) => (
 					<li key={sample.id} className="mb-2">
-						<button
+						<Button
 							type="button"
-							className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+							className="w-full"
+							variant="secondary"
 							onClick={() =>
 								navigate({ to: "/questions", search: { sample: sample.id } })
 							}
 						>
 							{sample.name}
-						</button>
+						</Button>
 					</li>
 				))}
 			</ul>

@@ -1,0 +1,48 @@
+---
+description: Design library, component primitives, and styling
+alwaysApply: false
+---
+
+# Rule: Use shadcn as the Design Library
+
+**Rule:**
+All UI components and styling in this project must use the shadcn design system and its component library as the primary source of design patterns, components, and visual language.
+
+**Rationale:**
+
+- Ensures a unified, modern, and accessible user interface
+- Promotes consistency in component usage, spacing, and theming
+- Simplifies maintenance and onboarding for new contributors
+
+**Guidelines:**
+
+- Use shadcn UI components (e.g., Button, Card, Input, Dialog, Badge, etc.) for all new UI features and when refactoring existing UI
+- Avoid custom CSS or third-party component libraries unless a shadcn component does not exist for the use case
+- Follow shadcn documentation and best practices for component composition and theming
+- When extending or customizing components, do so by extending shadcn primitives and patterns
+
+**Exceptions:**
+
+- Only use custom or third-party components if shadcn does not provide a suitable alternative and the use case is justified in code comments
+
+# Rule: Use shadcn as the Design Library
+
+**Rule:**
+All UI components and styling in this project must use the shadcn design system and its component library as the primary source of design patterns, components, and visual language.
+
+**Rationale:**
+
+- Ensures a unified, modern, and accessible user interface
+- Promotes consistency in component usage, spacing, and theming
+- Simplifies maintenance and onboarding for new contributors
+
+**Guidelines:**
+
+- Use shadcn UI components (e.g., Button, Card, Input, Dialog, Badge, etc.) for all new UI features and when refactoring existing UI
+- Avoid custom CSS or third-party component libraries unless a shadcn component does not exist for the use case
+- Follow shadcn documentation and best practices for component composition and theming
+- When extending or customizing components, do so by extending shadcn primitives and patterns
+
+**Exceptions:**
+
+- Only use custom or third-party components if shadcn does not provide a suitable alternative and the use case is justified in code comments

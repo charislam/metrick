@@ -1,4 +1,7 @@
 import type React from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface QuestionGenerationControlsProps {
 	answerableCount: number;
@@ -23,41 +26,43 @@ export const QuestionGenerationControls: React.FC<
 	onGenerate,
 	isGenerating,
 }) => (
-	<div className="flex flex-wrap gap-6 items-end mb-6">
-		<div>
-			<label
-				htmlFor="answerable-count"
-				className="block text-sm font-medium text-gray-700 mb-1"
-			>
-				Answerable
-			</label>
-			<input
-				id="answerable-count"
-				type="number"
-				min={0}
-				value={answerableCount}
-				onChange={(e) => setAnswerableCount(Number(e.target.value))}
-				className="border border-gray-300 rounded-md px-3 py-2 w-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
-			/>
+	<div className="mb-6">
+		<div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+			<div className="flex flex-col gap-2">
+				<Label htmlFor="answerable-count">Answerable</Label>
+				<Input
+					id="answerable-count"
+					type="number"
+					min={0}
+					value={answerableCount}
+					onChange={(e) => setAnswerableCount(Number(e.target.value))}
+					className="w-full"
+				/>
+			</div>
+			<div className="flex flex-col gap-2">
+				<Label htmlFor="non-answerable-count">Non-Answerable</Label>
+				<Input
+					id="non-answerable-count"
+					type="number"
+					min={0}
+					value={nonAnswerableCount}
+					onChange={(e) => setNonAnswerableCount(Number(e.target.value))}
+					className="w-full"
+				/>
+			</div>
+			<div className="flex flex-col gap-2 md:items-end">
+				<Button
+					type="button"
+					variant="default"
+					disabled={!apiKey || isGenerating}
+					onClick={onGenerate}
+					className="w-full md:w-auto"
+				>
+					{isGenerating ? "Generating..." : "Generate"}
+				</Button>
+			</div>
 		</div>
-		<div>
-			<label
-				htmlFor="non-answerable-count"
-				className="block text-sm font-medium text-gray-700 mb-1"
-			>
-				Non-Answerable
-			</label>
-			<input
-				id="non-answerable-count"
-				type="number"
-				min={0}
-				value={nonAnswerableCount}
-				onChange={(e) => setNonAnswerableCount(Number(e.target.value))}
-				className="border border-gray-300 rounded-md px-3 py-2 w-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
-			/>
-		</div>
-		<div className="flex-1" />
-		<div className="flex items-center gap-2">
+		<div className="mt-2 min-h-[1.5em]">
 			{apiKeyLoading ? (
 				<span className="text-gray-500">Loading API key...</span>
 			) : !apiKey ? (
@@ -69,14 +74,6 @@ export const QuestionGenerationControls: React.FC<
 					API key loaded from settings
 				</span>
 			)}
-			<button
-				type="button"
-				className="px-5 py-2 bg-green-600 text-white rounded-md font-semibold shadow hover:bg-green-700 transition"
-				onClick={onGenerate}
-				disabled={!apiKey || isGenerating}
-			>
-				{isGenerating ? "Generating..." : "Generate"}
-			</button>
 		</div>
 	</div>
 );

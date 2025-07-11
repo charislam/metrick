@@ -3,11 +3,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Bot } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { indexedDB } from "../../lib/indexed-db";
 import { fetchAllDocuments } from "../../lib/supabase";
 import type { DocumentSample } from "../../types";
-import { Button } from "../ui/Button";
-import { Input } from "../ui/Input";
 import type { FormValues } from "./DocumentSamplerUtils";
 import { schema, stratifiedSample } from "./DocumentSamplerUtils";
 
@@ -638,9 +638,8 @@ export function DocumentSamplerForm() {
 						/>
 						<Button
 							type="button"
-							variant="secondary"
+							variant="circle"
 							size="icon"
-							shape="circle"
 							onClick={handleGenerateName}
 							title="Generate random name"
 						>

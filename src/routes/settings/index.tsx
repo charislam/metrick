@@ -1,6 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
 	removeApiKeyFromStorage,
 	setApiKeyToStorage,
@@ -49,33 +52,30 @@ export default function SettingsPage() {
 		<div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
 			<h1 className="text-2xl font-bold mb-4">Settings</h1>
 			<form onSubmit={handleSave} className="space-y-4">
-				<label className="block">
-					<span className="text-gray-700">OpenAI API Key</span>
-					<input
-						type="password"
-						className="mt-1 block w-full border rounded px-3 py-2"
-						value={input}
-						onChange={(e) => setInput(e.target.value)}
-						placeholder="sk-..."
-						autoComplete="off"
-					/>
-				</label>
+				<Label htmlFor="api-key" className="block">
+					OpenAI API Key
+				</Label>
+				<Input
+					id="api-key"
+					type="password"
+					className="mt-1"
+					value={input}
+					onChange={(e) => setInput(e.target.value)}
+					placeholder="sk-..."
+					autoComplete="off"
+				/>
 				<div className="flex gap-2">
-					<button
-						type="submit"
-						className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-						disabled={saveMutation.isPending}
-					>
+					<Button type="submit" disabled={saveMutation.isPending}>
 						Save Key
-					</button>
-					<button
+					</Button>
+					<Button
 						type="button"
-						className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+						variant="destructive"
 						onClick={handleDelete}
 						disabled={!apiKey || deleteMutation.isPending}
 					>
 						Delete Key
-					</button>
+					</Button>
 				</div>
 				{justSaved && <div className="text-green-600">Key saved!</div>}
 				<div className="text-gray-600 mt-2">
