@@ -39,12 +39,12 @@ const QuestionsPage = () => {
 		return <DocumentSamplePicker />;
 	}
 	if (isLoading) {
-		return <div className="p-4">Loading...</div>;
+		return <div className="p-4 text-foreground">Loading...</div>;
 	}
 	if (isError || validSample === false) {
 		return (
 			<div className="p-4">
-				<div className="text-red-500 mb-2">
+				<div className="text-destructive mb-2">
 					{error instanceof Error
 						? error.message
 						: "Invalid sample ID. Please select a valid sample."}

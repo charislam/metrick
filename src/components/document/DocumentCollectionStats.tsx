@@ -34,16 +34,18 @@ export function DocumentCollectionStats() {
 	};
 
 	if (isLoading) {
-		return <div>Loading document stats...</div>;
+		return <div className="text-foreground">Loading document stats...</div>;
 	}
 	if (isError || !stats) {
-		return <div className="text-red-500">Error loading document stats.</div>;
+		return (
+			<div className="text-destructive">Error loading document stats.</div>
+		);
 	}
 
 	return (
 		<div className="space-y-8">
 			<div className="flex items-center justify-between">
-				<h2 className="text-2xl font-bold tracking-tight">
+				<h2 className="text-2xl font-bold tracking-tight text-foreground">
 					Document Collection Stats
 				</h2>
 				<Button
@@ -61,16 +63,24 @@ export function DocumentCollectionStats() {
 			</div>
 			<div className="flex flex-col gap-4">
 				<div className="bg-muted/30 rounded p-4 flex items-center justify-between">
-					<span className="font-medium">Guides</span>
-					<span className="font-bold text-lg">{stats.guides}</span>
+					<span className="font-medium text-foreground">Guides</span>
+					<span className="font-bold text-lg text-foreground">
+						{stats.guides}
+					</span>
 				</div>
 				<div className="bg-muted/30 rounded p-4 flex items-center justify-between">
-					<span className="font-medium">References</span>
-					<span className="font-bold text-lg">{stats.references}</span>
+					<span className="font-medium text-foreground">References</span>
+					<span className="font-bold text-lg text-foreground">
+						{stats.references}
+					</span>
 				</div>
 				<div className="bg-muted/30 rounded p-4 flex items-center justify-between">
-					<span className="font-medium">Troubleshooting Articles</span>
-					<span className="font-bold text-lg">{stats.troubleshootings}</span>
+					<span className="font-medium text-foreground">
+						Troubleshooting Articles
+					</span>
+					<span className="font-bold text-lg text-foreground">
+						{stats.troubleshootings}
+					</span>
 				</div>
 			</div>
 		</div>

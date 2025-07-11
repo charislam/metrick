@@ -1,53 +1,33 @@
-import type React from "react";
-import type { ChangeEvent } from "react";
 import type { Question } from "../../types";
 
-export const QuestionReviewCard: React.FC<{
+interface QuestionReviewCardProps {
 	question: Pick<Question, "id" | "text" | "type" | "status" | "generatedBy">;
-	onStatusChange: (id: string, newStatus: "accepted" | "rejected") => void;
-	onTextChange: (id: string, newText: string) => void;
-}> = ({ question, onStatusChange, onTextChange }) => {
-	const handleAccept = () => onStatusChange(question.id, "accepted");
-	const handleReject = () => onStatusChange(question.id, "rejected");
-	const handleEdit = (e: ChangeEvent<HTMLInputElement>) =>
-		onTextChange(question.id, e.target.value);
+}
 
+export function QuestionReviewCard({ question }: QuestionReviewCardProps) {
 	return (
-		<div className="border rounded p-4 mb-3 bg-white shadow">
-			<div className="flex items-center justify-between mb-2">
-				<div className="text-sm text-gray-500">
-					Source: {question.generatedBy}
-				</div>
-				<span
-					className={`px-2 py-0.5 rounded text-xs font-semibold ${question.type === "answerable" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}
-				>
-					{question.type === "answerable" ? "Answerable" : "Non-Answerable"}
+		<div className="border border-border rounded p-4 mb-3 bg-card shadow">
+			<div className="flex justify-between items-start mb-2">
+				<span className="text-sm font-medium text-muted-foreground">
+					{question.type}
+				</span>
+				<span className="text-sm text-muted-foreground">
+					{question.generatedBy}
 				</span>
 			</div>
-			<input
-				className="w-full border rounded px-2 py-1 mb-2"
-				value={question.text}
-				onChange={handleEdit}
-			/>
+			<p className="text-foreground mb-2">{question.text}</p>
 			<div className="flex gap-2">
 				<button
 					type="button"
-					className={`px-3 py-1 rounded ${question.status === "accepted" ? "bg-green-500 text-white" : "bg-gray-200"}`}
-					onClick={handleAccept}
+					className={`px-3 py-1 rounded text-sm ${
+						question.status === "accepted"
+							? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+							: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
+					}`}
 				>
-					Accept
+					{question.status === "accepted" ? "Accepted" : "Pending"}
 				</button>
-				<button
-					type="button"
-					className={`px-3 py-1 rounded ${question.status === "rejected" ? "bg-red-500 text-white" : "bg-gray-200"}`}
-					onClick={handleReject}
-				>
-					Reject
-				</button>
-				<span className="ml-4 text-xs text-gray-400">
-					Status: {question.status}
-				</span>
 			</div>
 		</div>
 	);
-};
+}

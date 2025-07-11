@@ -1,10 +1,10 @@
 import { useState } from "react";
 import type { Document } from "../../types";
 import { AddQuestionForm } from "./AddQuestionForm";
-import { useQuestionGeneration } from "./hooks/useQuestionGeneration";
-import { useSaveQuestions } from "./hooks/useSaveQuestions";
 import { QuestionGenerationControls } from "./QuestionGenerationControls";
 import { QuestionListReview } from "./QuestionListReview";
+import { useQuestionGeneration } from "./hooks/useQuestionGeneration";
+import { useSaveQuestions } from "./hooks/useSaveQuestions";
 
 export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 	sampleId,
@@ -52,11 +52,11 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 		questions.every((q) => q.status === "accepted" || q.status === "rejected");
 
 	return (
-		<div className="flex gap-10 p-8 bg-gray-50">
+		<div className="flex gap-10 p-8 bg-muted/50">
 			<div className="flex-1 min-w-0">
 				<div className="max-w-2xl mx-auto">
-					<div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-200">
-						<h2 className="text-2xl font-bold mb-4 text-gray-900">
+					<div className="bg-card rounded-xl shadow-lg p-8 mb-8 border border-border">
+						<h2 className="text-2xl font-bold mb-4 text-card-foreground">
 							Generate AI Questions
 						</h2>
 						<QuestionGenerationControls
@@ -70,7 +70,7 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 							isGenerating={generateMutation.isPending}
 						/>
 						{generateMutation.isError && (
-							<div className="text-red-500 mb-2">
+							<div className="text-destructive mb-2">
 								{generateMutation.error instanceof Error
 									? generateMutation.error.message
 									: String(generateMutation.error)}
@@ -82,68 +82,72 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 					<div className="flex items-center gap-4 mb-6">
 						<button
 							type="button"
-							className={`px-6 py-2 rounded-md font-semibold shadow transition text-white ${allReviewed ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-300 cursor-not-allowed"}`}
+							className={`px-6 py-2 rounded-md font-semibold shadow transition text-white ${
+								allReviewed
+									? "bg-primary hover:bg-primary/90"
+									: "bg-muted cursor-not-allowed"
+							}`}
 							disabled={!allReviewed || saveMutation.isPending}
 							onClick={() => saveMutation.mutate()}
 						>
 							{saveMutation.isPending ? "Saving..." : "Save Questions"}
 						</button>
 						{saveSuccess && (
-							<span className="text-green-600 font-medium">
+							<span className="text-green-600 dark:text-green-400 font-medium">
 								Questions saved!
 							</span>
 						)}
 						{saveMutation.isError && (
-							<span className="text-red-500 text-sm">
+							<span className="text-destructive text-sm">
 								{saveMutation.error instanceof Error
 									? saveMutation.error.message
 									: String(saveMutation.error)}
 							</span>
 						)}
 						{!allReviewed && questions.length > 0 && (
-							<span className="text-sm text-gray-500">
+							<span className="text-sm text-muted-foreground">
 								All questions must be reviewed before saving.
 							</span>
 						)}
 					</div>
-					<QuestionListReview
-						questions={questions}
-						onStatusChange={handleStatusChange}
-						onTextChange={handleTextChange}
-					/>
+					<QuestionListReview sampleId={sampleId} />
 				</div>
 			</div>
 			<aside className="w-96 shrink-0">
 				<div className="sticky top-8">
-					<div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-						<h3 className="font-semibold text-lg mb-2 text-gray-900">
+					<div className="bg-card rounded-xl shadow-lg border border-border p-6">
+						<h3 className="font-semibold text-lg mb-2 text-card-foreground">
 							Document Sample
 						</h3>
 						{sampleLoading ? (
-							<div className="text-xs text-gray-400">Loading sample...</div>
+							<div className="text-xs text-muted-foreground">
+								Loading sample...
+							</div>
 						) : sampleError ? (
-							<div className="text-xs text-red-500">Error loading sample.</div>
+							<div className="text-xs text-destructive">
+								Error loading sample.
+							</div>
 						) : sample ? (
 							<div>
-								<div className="font-bold mb-1 text-base text-gray-800">
+								<div className="font-bold mb-1 text-base text-foreground">
 									{sample.name}
 								</div>
-								<div className="text-xs text-muted-foreground mb-4 text-gray-500">
+								<div className="text-xs text-muted-foreground mb-4">
 									{sample.description}
 								</div>
 								<ul className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
 									{sample.documents.map((doc: Document) => (
 										<li
 											key={doc.id}
-											className="border border-gray-100 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 transition"
+											className="border border-border rounded-lg p-3 bg-muted/30 hover:bg-muted/50 transition"
 										>
-											<div className="font-medium text-sm mb-1 text-gray-900 truncate">
+											<div className="font-medium text-sm mb-1 text-foreground truncate">
 												{doc.title}
 											</div>
-											<div className="text-xs text-blue-700 mb-1 capitalize">
+											<div className="text-xs text-primary mb-1 capitalize">
 												{doc.contentType}
 											</div>
-											<div className="text-xs text-gray-700 line-clamp-4 whitespace-pre-line">
+											<div className="text-xs text-muted-foreground line-clamp-4 whitespace-pre-line">
 												{doc.content.slice(0, 240)}
 												{doc.content.length > 240 ? "..." : ""}
 											</div>
@@ -152,7 +156,9 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 								</ul>
 							</div>
 						) : (
-							<div className="text-xs text-gray-400">No sample found.</div>
+							<div className="text-xs text-muted-foreground">
+								No sample found.
+							</div>
 						)}
 					</div>
 				</div>

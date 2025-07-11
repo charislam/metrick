@@ -46,14 +46,14 @@ export default function SettingsPage() {
 	};
 
 	return (
-		<div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-			<h1 className="text-2xl font-bold mb-4">Settings</h1>
+		<div className="max-w-md mx-auto mt-10 p-6 bg-card border border-border rounded-lg shadow-sm">
+			<h1 className="text-2xl font-bold mb-4 text-card-foreground">Settings</h1>
 			<form onSubmit={handleSave} className="space-y-4">
 				<label className="block">
-					<span className="text-gray-700">OpenAI API Key</span>
+					<span className="text-foreground font-medium">OpenAI API Key</span>
 					<input
 						type="password"
-						className="mt-1 block w-full border rounded px-3 py-2"
+						className="mt-1 block w-full border border-input rounded-md px-3 py-2 bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
 						value={input}
 						onChange={(e) => setInput(e.target.value)}
 						placeholder="sk-..."
@@ -63,27 +63,29 @@ export default function SettingsPage() {
 				<div className="flex gap-2">
 					<button
 						type="submit"
-						className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+						className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
 						disabled={saveMutation.isPending}
 					>
 						Save Key
 					</button>
 					<button
 						type="button"
-						className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+						className="bg-destructive text-destructive-foreground px-4 py-2 rounded-md hover:bg-destructive/90 disabled:opacity-50 disabled:cursor-not-allowed"
 						onClick={handleDelete}
 						disabled={!apiKey || deleteMutation.isPending}
 					>
 						Delete Key
 					</button>
 				</div>
-				{justSaved && <div className="text-green-600">Key saved!</div>}
-				<div className="text-gray-600 mt-2">
+				{justSaved && (
+					<div className="text-green-600 dark:text-green-400">Key saved!</div>
+				)}
+				<div className="text-muted-foreground mt-2">
 					{isLoading
 						? "Loading keys..."
 						: apiKey
-							? "A key is saved (hidden for security)."
-							: "No key saved."}
+						? "A key is saved (hidden for security)."
+						: "No key saved."}
 				</div>
 			</form>
 		</div>
