@@ -6,8 +6,6 @@ import { indexedDB } from "../../../lib/indexed-db";
 import type { DocumentSample, Question } from "../../../types";
 
 export function useQuestionGeneration(sampleId: string) {
-	const [answerableCount, setAnswerableCount] = useState<number>(12);
-	const [nonAnswerableCount, setNonAnswerableCount] = useState<number>(8);
 	const [questions, setQuestions] = useState<
 		Pick<Question, "id" | "text" | "type" | "status" | "generatedBy">[]
 	>([]);
@@ -24,8 +22,13 @@ export function useQuestionGeneration(sampleId: string) {
 			(await indexedDB.getDocumentSample(sampleId)) ?? null,
 	});
 
+	type GenerateArgs = { answerableCount: number; nonAnswerableCount: number };
+
 	const generateMutation = useMutation({
-		mutationFn: async (): Promise<void> => {
+		mutationFn: async ({
+			answerableCount,
+			nonAnswerableCount,
+		}: GenerateArgs): Promise<void> => {
 			if (!apiKey)
 				throw new Error(
 					"Missing OpenAI API key. Configure your API key in Settings.",
@@ -63,10 +66,6 @@ export function useQuestionGeneration(sampleId: string) {
 	});
 
 	return {
-		answerableCount,
-		setAnswerableCount,
-		nonAnswerableCount,
-		setNonAnswerableCount,
 		questions,
 		setQuestions,
 		apiKey,

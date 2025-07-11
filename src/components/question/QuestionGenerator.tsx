@@ -13,10 +13,6 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 	sampleId,
 }) => {
 	const {
-		answerableCount,
-		setAnswerableCount,
-		nonAnswerableCount,
-		setNonAnswerableCount,
 		questions,
 		setQuestions,
 		apiKey,
@@ -54,6 +50,16 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 		questions.length > 0 &&
 		questions.every((q) => q.status === "accepted" || q.status === "rejected");
 
+	const handleGenerate = ({
+		answerableCount,
+		nonAnswerableCount,
+	}: {
+		answerableCount: number;
+		nonAnswerableCount: number;
+	}) => {
+		generateMutation.mutate({ answerableCount, nonAnswerableCount });
+	};
+
 	return (
 		<div className="flex gap-10 p-8 bg-muted/50 dark:bg-background transition-colors">
 			<div className="flex-1 min-w-0">
@@ -63,13 +69,9 @@ export const QuestionGenerator: React.FC<{ sampleId: string }> = ({
 							Generate AI Questions
 						</h2>
 						<QuestionGenerationControls
-							answerableCount={answerableCount}
-							setAnswerableCount={setAnswerableCount}
-							nonAnswerableCount={nonAnswerableCount}
-							setNonAnswerableCount={setNonAnswerableCount}
+							onGenerate={handleGenerate}
 							apiKey={apiKey}
 							apiKeyLoading={apiKeyLoading}
-							onGenerate={() => generateMutation.mutate()}
 							isGenerating={generateMutation.isPending}
 						/>
 						{generateMutation.isError && (
