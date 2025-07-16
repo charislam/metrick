@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { queryKeys } from "@/lib/query-keys";
 import {
 	removeApiKeyFromStorage,
 	setApiKeyToStorage,
@@ -21,7 +22,7 @@ export default function SettingsPage() {
 			setApiKeyToStorage(key);
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["openai-api-key"] });
+			queryClient.invalidateQueries({ queryKey: queryKeys.openaiApiKey() });
 			setJustSaved(true);
 			setInput("");
 			setTimeout(() => setJustSaved(false), 1500);
@@ -33,7 +34,7 @@ export default function SettingsPage() {
 			removeApiKeyFromStorage();
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["openai-api-key"] });
+			queryClient.invalidateQueries({ queryKey: queryKeys.openaiApiKey() });
 		},
 	});
 

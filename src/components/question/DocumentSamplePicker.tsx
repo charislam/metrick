@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import { queryKeys } from "@/lib/query-keys";
 import { indexedDB } from "../../lib/indexed-db";
 import type { DocumentSample } from "../../types";
 
@@ -12,7 +13,7 @@ export const DocumentSamplePicker: React.FC = () => {
 		isError,
 		error,
 	} = useQuery<DocumentSample[]>({
-		queryKey: ["document-samples"],
+		queryKey: queryKeys.documentSamples(),
 		queryFn: async () => (await indexedDB.getDocumentSamples()) || [],
 	});
 

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { queryKeys } from "@/lib/query-keys";
 import { fetchAllDocuments } from "../../lib/supabase";
 
 export function DocumentCollectionStats() {
@@ -15,7 +16,7 @@ export function DocumentCollectionStats() {
 		references: number;
 		troubleshootings: number;
 	}>({
-		queryKey: ["all-documents-stats"],
+		queryKey: queryKeys.allDocumentsStats(),
 		queryFn: async () => {
 			const result = await fetchAllDocuments();
 			const { guides, references, troubleshootings } = result.unwrap();
@@ -27,6 +28,7 @@ export function DocumentCollectionStats() {
 		},
 		staleTime: Infinity, // Cache indefinitely
 		gcTime: Infinity, // Keep in memory indefinitely
+		refetchOnWindowFocus: false,
 	});
 
 	const handleRefresh = () => {

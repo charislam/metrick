@@ -22,7 +22,6 @@ export interface Annotation {
 	questionId: string;
 	documentId: string;
 	relevancyScore: 0 | 1 | 2 | 3;
-	notes?: string;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -47,18 +46,21 @@ export interface SamplingCriteria {
 	additionalFilters?: Record<string, unknown>;
 }
 
+// Normalized version stored in DB - references by ID only
 export interface AnnotationSession {
 	id: string;
-	name: string;
-	description: string;
 	documentSampleId: string;
-	questions: Question[];
-	annotations: Annotation[];
-	progress: {
-		total: number;
-		completed: number;
-		remaining: number;
-	};
+	questionIds: string[];
+	annotationIds: string[];
 	createdAt: Date;
 	updatedAt: Date;
+}
+
+// Denormalized version for components - includes full objects
+export interface AnnotationSessionWithRelations
+	extends Omit<AnnotationSession, "questionIds" | "documentSampleId"> {
+	documentSample: DocumentSample;
+	questions: Question[];
+	annotations: Annotation[];
+	hasUnsavedChanges?: boolean;
 }

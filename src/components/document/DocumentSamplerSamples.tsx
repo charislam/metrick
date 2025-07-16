@@ -14,6 +14,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { queryKeys } from "@/lib/query-keys";
 import { indexedDB } from "../../lib/indexed-db";
 import type { DocumentSample } from "../../types";
 
@@ -24,7 +25,7 @@ export function useDocumentSamples() {
 		isError,
 		error,
 	} = useQuery<DocumentSample[]>({
-		queryKey: ["document-samples"],
+		queryKey: queryKeys.documentSamples(),
 		queryFn: async () => (await indexedDB.getDocumentSamples()) || [],
 	});
 	return { samples, isLoading, isError, error };
@@ -80,7 +81,7 @@ export function DocumentSamplerSamples() {
 			await indexedDB.deleteDocumentSample(id);
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["document-samples"] });
+			queryClient.invalidateQueries({ queryKey: queryKeys.documentSamples() });
 			setDeleteId(null);
 		},
 	});

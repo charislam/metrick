@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { queryKeys } from "@/lib/query-keys";
 import { indexedDB } from "../../lib/indexed-db";
 import { fetchAllDocuments } from "../../lib/supabase";
 import type { DocumentSample } from "../../types";
@@ -532,7 +533,7 @@ export function useDocumentSamplerForm() {
 			await indexedDB.saveDocumentSample(sample);
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["document-samples"] });
+			queryClient.invalidateQueries({ queryKey: queryKeys.documentSamples() });
 			form.reset();
 		},
 	});

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod";
+import { queryKeys } from "@/lib/query-keys";
 import { DocumentSamplePicker } from "../../components/question/DocumentSamplePicker";
 import { QuestionGenerator } from "../../components/question/QuestionGenerator";
 import { DatabaseError } from "../../lib/error";
@@ -20,7 +21,7 @@ const QuestionsPage = () => {
 		isError,
 		error,
 	} = useQuery<boolean, Error | null>({
-		queryKey: ["validate-sample", sample],
+		queryKey: queryKeys.validateSample(sample),
 		enabled: !!sample,
 		queryFn: async () => {
 			if (!sample) return false;

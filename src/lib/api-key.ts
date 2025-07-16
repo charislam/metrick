@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/query-keys";
 
 const LOCAL_STORAGE_KEY = "OPENAI_API_KEY";
 
@@ -16,7 +17,7 @@ export function removeApiKeyFromStorage(): void {
 
 export function useApiKeyQuery() {
 	return useQuery({
-		queryKey: ["openai-api-key"],
+		queryKey: queryKeys.openaiApiKey(),
 		queryFn: getApiKeyFromStorage,
 	});
 }

@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { queryKeys } from "@/lib/query-keys";
 import { generateQuestions } from "../../../lib/ai-question-generator";
 import { useApiKeyQuery } from "../../../lib/api-key";
 import { indexedDB } from "../../../lib/indexed-db";
@@ -17,7 +18,7 @@ export function useQuestionGeneration(sampleId: string) {
 		isLoading: sampleLoading,
 		isError: sampleError,
 	} = useQuery<DocumentSample | null>({
-		queryKey: ["document-sample", sampleId],
+		queryKey: queryKeys.documentSample(sampleId),
 		queryFn: async (): Promise<DocumentSample | null> =>
 			(await indexedDB.getDocumentSample(sampleId)) ?? null,
 	});

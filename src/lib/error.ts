@@ -90,6 +90,21 @@ export class DatabaseError extends Error {
 }
 
 /**
+ * Represents an error where an expected database entry was not found.
+ */
+export class DatabaseEntryNotFoundError extends Error {
+	override cause: unknown;
+	constructor(message: string, cause?: unknown) {
+		super(message);
+		this.name = "DatabaseEntryNotFoundError";
+		this.cause = cause;
+		if (cause instanceof Error && cause.stack) {
+			this.stack += `\nCaused by: ${cause.stack}`;
+		}
+	}
+}
+
+/**
  * Represents an unknown error that occurred during an operation.
  */
 export class UnknownError extends Error {

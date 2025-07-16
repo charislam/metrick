@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/query-keys";
 import { Result, UnknownError } from "../../../lib/error";
 import { indexedDB } from "../../../lib/indexed-db";
 import type { Question } from "../../../types";
@@ -43,7 +44,12 @@ export function useSaveQuestions({
 			if (result.isOk()) {
 				setSaveSuccess(true);
 				setTimeout(() => setSaveSuccess(false), 2000);
-				queryClient.invalidateQueries({ queryKey: ["questions", sampleId] });
+				queryClient.invalidateQueries({
+					queryKey: queryKeys.questions(),
+				});
+				queryClient.invalidateQueries({
+					queryKey: queryKeys.questionsBySample(sampleId),
+				});
 			}
 		},
 	});

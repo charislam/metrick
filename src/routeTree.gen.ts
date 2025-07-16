@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as QuestionsIndexRouteImport } from './routes/questions/index'
 import { Route as DocumentsIndexRouteImport } from './routes/documents/index'
+import { Route as AnnotationIndexRouteImport } from './routes/annotation/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,15 +35,22 @@ const DocumentsIndexRoute = DocumentsIndexRouteImport.update({
   path: '/documents/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnnotationIndexRoute = AnnotationIndexRouteImport.update({
+  id: '/annotation/',
+  path: '/annotation/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/annotation': typeof AnnotationIndexRoute
   '/documents': typeof DocumentsIndexRoute
   '/questions': typeof QuestionsIndexRoute
   '/settings': typeof SettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/annotation': typeof AnnotationIndexRoute
   '/documents': typeof DocumentsIndexRoute
   '/questions': typeof QuestionsIndexRoute
   '/settings': typeof SettingsIndexRoute
@@ -50,20 +58,28 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/annotation/': typeof AnnotationIndexRoute
   '/documents/': typeof DocumentsIndexRoute
   '/questions/': typeof QuestionsIndexRoute
   '/settings/': typeof SettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/documents' | '/questions' | '/settings'
+  fullPaths: '/' | '/annotation' | '/documents' | '/questions' | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/documents' | '/questions' | '/settings'
-  id: '__root__' | '/' | '/documents/' | '/questions/' | '/settings/'
+  to: '/' | '/annotation' | '/documents' | '/questions' | '/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/annotation/'
+    | '/documents/'
+    | '/questions/'
+    | '/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnnotationIndexRoute: typeof AnnotationIndexRoute
   DocumentsIndexRoute: typeof DocumentsIndexRoute
   QuestionsIndexRoute: typeof QuestionsIndexRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
@@ -99,11 +115,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocumentsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/annotation/': {
+      id: '/annotation/'
+      path: '/annotation'
+      fullPath: '/annotation'
+      preLoaderRoute: typeof AnnotationIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnnotationIndexRoute: AnnotationIndexRoute,
   DocumentsIndexRoute: DocumentsIndexRoute,
   QuestionsIndexRoute: QuestionsIndexRoute,
   SettingsIndexRoute: SettingsIndexRoute,
