@@ -121,3 +121,20 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+@layer utilities {
+	@keyframes wiggle {
+		0%, 100% { transform: rotate(-3deg); }
+		50% { transform: rotate(3deg); }
+	}
+	
+	.animate-wiggle {
+		animation: wiggle 1s ease-in-out infinite;
+	}
+	
+	@media (prefers-reduced-motion: reduce) {
+		.animate-wiggle {
+			animation: none;
+		}
+	}
+}
